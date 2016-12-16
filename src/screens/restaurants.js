@@ -5,7 +5,7 @@ import {Text} from 'menunico/src/components/type'
 
 import { ListView, TouchableOpacity } from 'react-native'
 
-import data from '../data/restaurants.json'
+
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Fa from 'react-native-vector-icons/FontAwesome'
 
@@ -17,7 +17,7 @@ export default class Restaurants extends Component {
 
     const ds = new ListView.DataSource({rowHasChanged: this._rowDiffHandler});
      this.state = {
-       data: ds.cloneWithRows([...data, ...data]),
+       data: ds.cloneWithRows(props.restaurants),
        date: moment()
      };
   }
@@ -26,15 +26,20 @@ export default class Restaurants extends Component {
 
   }
 
-  _navigateToRestaurant(restaurant) {
+  _navigateToRestaurant(index, name) {
     const route = {
       key: 'restaurant',
-      data: restaurant
+      navbar: {
+        title: name,
+        'color': 'black',
+        background: 'rgba(0,0,0,0.0)'
+      }
     }
+    this.props.dispatch({type: 'SET_CURRENT_RESTAURANT', payload: index})
     this.props.dispatch(this.props.navigator.push('menunico', route))
   }
 
-  _renderRestaurant(row) {
+  _renderRestaurant(row, section, index) {
     const {name, address} = row.source
     const style = {
       borderStyle: 'solid',
@@ -42,12 +47,12 @@ export default class Restaurants extends Component {
       borderColor: '#ccc'
     }
     return (
-      <TouchableOpacity onPress={this._navigateToRestaurant.bind(this, row)}>
+      <TouchableOpacity delayPressOut={0} delayPressIn={0} onPress={this._navigateToRestaurant.bind(this, index, name)}>
         <View style={style} align='stretch' padding={[20,20,5,20]} flex={0}>
           <View direction='row' align='center'>
             <View align='stretch'>
               <View height={150}>
-                <Image full resizeMode='cover' source={require('../static/resto.png')}/>
+                <Image full resizeMode='cover' source={this.props.static.demoCover}/>
               </View>
             </View>
             <View margin={[0,0,0,10]}>
@@ -74,7 +79,7 @@ export default class Restaurants extends Component {
 
   render(){
     return (
-      <View align='stretch' padding={[0,20,0,20]}>
+      <View align='stretch' padding={[0,20,0,20]} margin={[60]}>
         <View flex={0} direction='row' justify='space-between' align='center' margin={[20,0,20]}>
           <View background='#F2504B' round={40} align='center' padding={[5,15,5,15]} flex={0}>
             <Text size={14} white>{`Barcelona, ${this.state.date.format('dddd Do MMMM')}`}</Text>
