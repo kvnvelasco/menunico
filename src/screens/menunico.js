@@ -8,6 +8,8 @@ import { connect } from 'react-redux'
 
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
+import { pop } from 'menunico/'
+
 class Menunico extends Component {
 
   render() {

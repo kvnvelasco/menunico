@@ -32,13 +32,15 @@ export default class Restaurant extends Component {
   }
 
   render() {
-    const resto = this.props.restaurants[this.props.selected].source
+    const resto = this.props.restaurants[this.props.selected]
+    const imageURL = 'https://s3.eu-central-1.amazonaws.com/menunico'
     return(
         <View align='stretch' padding={[60]}>
           <ScrollView removeClippedSubviews={false} showsVerticalScrollIndicator={false}>
               <View align='stretch' background='white'>
                 <View flex={0} height={200} align='stretch'>
-                  {this.state.images && <Image full resizeMode='cover' source={this.props.static.demoCover} />}
+                  {this.state.images && resto.image &&<Image full resizeMode='cover'
+                    source={{uri: `${imageURL}/${resto.image[0].url}/normal/${resto.image[0].name}`}} />}
                 </View>
                 <View flex={0} align='center' direction='row' justify='space-between' padding={[20,20,20,20]}>
                   <Text size={24} bold color='#F2504B'>{resto.name}</Text>
@@ -81,13 +83,16 @@ export default class Restaurant extends Component {
                   </View>
                 </View>
                 <View padding={[20,20,20,20]}>
-                  <TextWithIcon icon='phone' text={resto.contact[0].telephone} />
-                  <TextWithIcon icon='globe' text={resto.contact[0].webpage} />
-                  <TextWithIcon icon='facebook' text={resto.contact[0].facebook} />
-                  <TextWithIcon icon='twitter' text={resto.contact[0].twitter} />
+                  {resto.contact && <View>
+                    <TextWithIcon icon='phone' text={resto.contact[0].telephone} />
+                    <TextWithIcon icon='globe' text={resto.contact[0].webpage} />
+                    <TextWithIcon icon='facebook' text={resto.contact[0].facebook} />
+                    <TextWithIcon icon='twitter' text={resto.contact[0].twitter} />
+                  </View>}
                 </View>
-                <View align='stretch' background='green' flex={0} height={200}>
-                  {this.state.map &&
+                {this.state.map && resto.address &&
+                <View align='stretch' flex={0} height={200}>
+
                     <MapView
                       style={styles.map}
                       initialRegion={{
@@ -100,8 +105,9 @@ export default class Restaurant extends Component {
                           latitude: resto.address[0].location.lat,
                           longitude: resto.address[0].location.lon,
                         }} />
-                    </MapView>}
+                    </MapView>
                 </View>
+              }
              </View>
           </ScrollView>
           <View style={style.icons} direction='row' justify='flex-end' padding={[10,10,10,10]}>

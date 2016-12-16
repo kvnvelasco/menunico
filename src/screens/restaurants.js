@@ -40,24 +40,27 @@ export default class Restaurants extends Component {
   }
 
   _renderRestaurant(row, section, index) {
-    const {name, address} = row.source
+    const {name, address, image} = row
+    const imageURL = 'https://s3.eu-central-1.amazonaws.com/menunico'
+    let cover = image && image[0] || null
     const style = {
       borderStyle: 'solid',
       borderBottomWidth: 1,
       borderColor: '#ccc'
     }
+    console.log(cover && `${imageURL}/${cover.url}/${cover.name}`)
     return (
       <TouchableOpacity delayPressOut={0} delayPressIn={0} onPress={this._navigateToRestaurant.bind(this, index, name)}>
-        <View style={style} align='stretch' padding={[20,20,5,20]} flex={0}>
+        <View style={style} align='stretch' padding={[20,0,5,0]} flex={0}>
           <View direction='row' align='center'>
             <View align='stretch'>
               <View height={150}>
-                <Image full resizeMode='cover' source={this.props.static.demoCover}/>
+                {cover && <Image full resizeMode='cover' source={{uri: `${imageURL}/${cover.url}/128x128/${cover.name}`}}/>}
               </View>
             </View>
             <View margin={[0,0,0,10]}>
               <Text size={16} color='#F2504B'>{name}</Text>
-              <Text size={14} color='#ccc'>{`${address[0].street}`}</Text>
+              <Text size={14} color='#ccc'>{`${address && address[0].street}`}</Text>
               <View>
                 <Text size={12}>
                   1 Dish: Mushrooms croquettes. Truffled Eggs with ham...
