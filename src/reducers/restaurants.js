@@ -1,6 +1,5 @@
-import data from '../data/restaurants.json'
 const initialState = {
-  list: data
+  list: []
 }
 
 export default function reducer(state=initialState, action) {

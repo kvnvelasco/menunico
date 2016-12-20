@@ -14,14 +14,10 @@ import moment from 'moment'
 export default class Restaurants extends Component {
   constructor(props) {
     super(props)
-
-    const ds = new ListView.DataSource({rowHasChanged: this._rowDiffHandler});
      this.state = {
-       data: ds.cloneWithRows(props.restaurants),
        date: moment()
      };
   }
-
   _rowDiffHandler() {
 
   }
@@ -48,7 +44,6 @@ export default class Restaurants extends Component {
       borderBottomWidth: 1,
       borderColor: '#ccc'
     }
-    console.log(cover && `${imageURL}/${cover.url}/${cover.name}`)
     return (
       <TouchableOpacity delayPressOut={0} delayPressIn={0} onPress={this._navigateToRestaurant.bind(this, index, name)}>
         <View style={style} align='stretch' padding={[20,0,5,0]} flex={0}>
@@ -81,21 +76,33 @@ export default class Restaurants extends Component {
 
 
   render(){
+    const ds = new ListView.DataSource({rowHasChanged: this._rowDiffHandler});
+    const data = this.props.restaurants.length && ds.cloneWithRows(this.props.restaurants)
     return (
       <View align='stretch' padding={[0,20,0,20]} margin={[60]}>
-        <View flex={0} direction='row' justify='space-between' align='center' margin={[20,0,20]}>
+        <View flex={0} direction='row' justify='center' align='center' margin={[20,0,20]}>
           <View background='#F2504B' round={40} align='center' padding={[5,15,5,15]} flex={0}>
             <Text size={14} white>{`Barcelona, ${this.state.date.format('dddd Do MMMM')}`}</Text>
           </View>
-          <View direction='row' align='center' justify='space-between' width={60} flex={0}>
-            <Icon name='place' size={24}/>
-            <Fa name='filter' size={24}/>
+        </View>
+        {this.props.restaurants.length &&
+          <ListView
+            showsVerticalScrollIndicator={false}
+            dataSource={data}
+            renderRow={this._renderRestaurant.bind(this)} />
+        }
+        <View direction='row' align='center' justify='center' height={60} flex={0}>
+          <View flex={0} justify='space-between' width={200} direction='row'>
+            <View direction='row'>
+              <Icon name='place' size={24}/>
+              <Text size={14}>Map View</Text>
+            </View>
+            <View direction='row' justify='flex-end'>
+              <Fa name='filter' size={24}/>
+              <Text size={14}> Filters </Text>
+            </View>
           </View>
         </View>
-        <ListView
-          showsVerticalScrollIndicator={false}
-          dataSource={this.state.data}
-          renderRow={this._renderRestaurant.bind(this)} />
       </View>
     )
   }

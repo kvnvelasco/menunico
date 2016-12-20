@@ -21,13 +21,13 @@ export default class Restaurant extends Component {
     super()
     this.state = {
       map: false,
-      images: true
+      images: false
     }
   }
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
-      this.setState({map: true})
+      this.setState({map: true, images: true})
     });
   }
 
@@ -39,14 +39,16 @@ export default class Restaurant extends Component {
           <ScrollView removeClippedSubviews={false} showsVerticalScrollIndicator={false}>
               <View align='stretch' background='white'>
                 <View flex={0} height={200} align='stretch'>
-                  {this.state.images && resto.image &&<Image full resizeMode='cover'
+                  {this.state.images && resto.image.length && <Image full resizeMode='cover'
                     source={{uri: `${imageURL}/${resto.image[0].url}/normal/${resto.image[0].name}`}} />}
                 </View>
                 <View flex={0} align='center' direction='row' justify='space-between' padding={[20,20,20,20]}>
                   <Text size={24} bold color='#F2504B'>{resto.name}</Text>
+                  {/* TODO: add real price */}
                   <Text size={14} bold> 10 € </Text>
                 </View>
                 <View align='center'>
+                  {/* TODO: add real dishes */}
                   <Text bold color='#5C5E5D'>Menu of the Day</Text>
                   <View flex={0} padding={[0,20,0,20]} margin={[20,0,10]}>
                     <Text style={{marginBottom: 20}} color='#F2504B'>First Dish</Text>
@@ -108,6 +110,19 @@ export default class Restaurant extends Component {
                     </MapView>
                 </View>
               }
+              <View align='stretch' margin={[10]} padding={[0, 20, 40 , 20]}>
+                <Text size={15} bold>Payment Methods</Text>
+                <View direction='row' margin={[10]}>
+                    <Image margin={[0,10]} source={this.props.static.payment.cash} height={40} width={66}/>
+                    {resto.paymentmethods.map( item => {
+                      switch (item.mainid) {
+                        case 3:
+                          return   <Image margin={[0,10]} key={item.mainid} source={this.props.static.payment.diners} height={40} width={66}/>
+                        default:
+                          return null
+                      }})}
+                </View>
+              </View>
              </View>
           </ScrollView>
           <View style={style.icons} direction='row' justify='flex-end' padding={[10,10,10,10]}>
@@ -117,7 +132,6 @@ export default class Restaurant extends Component {
             </View>
           </View>
         </View>
-
     )
   }
 }
