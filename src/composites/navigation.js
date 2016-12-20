@@ -2,7 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { BackAndroid,
           TouchableOpacity,
           StyleSheet,
-          Navigator as NativeNavigator } from 'react-native'
+          Navigator as NativeNavigator,
+          InteractionManager } from 'react-native'
 let Back = BackAndroid
 
 import { View } from 'menunico/src/components/layout'
@@ -48,31 +49,37 @@ export class Navigator extends Component {
     return true
   }
 
+  _clear() {
+    InteractionManager.runAfterInteractions(this._clearAction.call(this))
+  }
+
+  _clearAction(){
+    this.props.dispatch({type: 'NAVIGATOR_CLEAR_ACTION', payload: {id: this.id}})
+  }
+
   componentWillReceiveProps(newProps) {
     if(!newProps.data) { return newProps}
     switch (newProps.data.navigateAction) {
       case 'PUSH':
         this.nav.push(newProps.data.currentRoute)
-        this.props.dispatch({type: 'NAVIGATOR_CLEAR_ACTION', payload: {id: this.id}})
-        break
+        this._clear()
       case 'POP':
         if(this.props.data.final){
           BackAndroid.exitApp()
         }
         this.nav.pop()
-        this.props.dispatch({type: 'NAVIGATOR_CLEAR_ACTION', payload: {id: this.id}})
+        this._clear()
         break
       case 'RESET_TO':
         this.nav.resetTo(newProps.data.currentRoute)
         // this.nav.immediatelyResetRouteStack([newProps.data.currentRoute])
-        this.props.dispatch({type: 'NAVIGATOR_CLEAR_ACTION', payload: {id: this.id}})
-        break
+        this._clear()
       case 'REPLACE':
         this.nav.replace(newProps.data.currentRoute)
-        this.props.dispatch({type: 'NAVIGATOR_CLEAR_ACTION', payload: {id: this.id}})
+        this._clear()
         break
       default:
-        return true
+        break
     }
   }
 
@@ -80,10 +87,10 @@ export class Navigator extends Component {
     const element = this.props.children.find( item => {
                       return item.key == route.key
                     })
-    if(!element){
-      console.error(`no route found for ${route.key}`)
-      return false
-    }
+    // if(!element){
+    //   console.error(`no route found for ${route.key}`)
+    //   return false
+    // }
 
     const boundPop = this.props.dispatch.bind(element, pop())
 
@@ -102,7 +109,7 @@ export class Navigator extends Component {
   }
 
   _renderScene(route, navigator) {
-    let scene = this._assembleRoute(route)
+    const scene = this._assembleRoute(route)
     return scene.component
   }
 
@@ -112,6 +119,6 @@ export class Navigator extends Component {
       initialRoute={this.initialRoute}
       renderScene={this._renderScene.bind(this)}
       ref={ nav => this.nav = nav}
-           />
+      />
   }
 }

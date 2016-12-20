@@ -93,6 +93,18 @@ export default class Restaurants extends Component {
     this.props.dispatch({type: 'NAVIGATE_PUSH', payload: navigate})
   }
 
+  _openMap() {
+    const navigate = {
+      route: {
+        key: 'map',
+        animation: 'FloatFromBottom',
+        title: 'Restaurant Map View'
+      },
+      id: 'menunico'
+    }
+    this.props.dispatch({type: 'NAVIGATE_PUSH', payload: navigate})
+  }
+
   render(){
     return (
       <View align='stretch' padding={[0,20,0,20]} margin={[60]}>
@@ -111,13 +123,14 @@ export default class Restaurants extends Component {
         }
         <View direction='row'
           justify='center' height={60} flex={0}>
-          <TouchableOpacity>
+          <TouchableOpacity delayPressOut={0}
+            onPress={this._openMap.bind(this)}>
             <View align='center' padding={[20,20,20,20]} direction='row'>
               <Icon name='place' size={24}/>
               <Text size={14}>Map View</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this._openFilters.bind(this)}>
+          <TouchableOpacity delayPressOut={0} onPress={this._openFilters.bind(this)}>
             <View align='center' padding={[20,20,20,20]} direction='row' justify='flex-end'>
               <Fa name='filter' size={24}/>
               <Text size={14}> Filters </Text>

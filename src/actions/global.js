@@ -1,11 +1,25 @@
 import {fetchRestaurants} from './api'
 import {ToastAndroid} from 'react-native'
+
+const geoPromise = new Promise( (resolve, reject) => {
+  navigator.geolocation.getCurrentPosition(resolve, reject)
+})
+
 export function bootstrap() {
   return async dispatch => {
     try {
-      const date = new Date()
+      const geo = await geoPromise
       await dispatch({type:'LOADING_RESTAURANTS'})
-      const response = await fetchRestaurants()
+      const request = {
+        "geobox" : {
+          "top_left_lat":     geo.coords.latitude   - 0.125,
+          "top_left_lon":     geo.coords.longitude  - 0.125,
+          "bottom_right_lat": geo.coords.latitude   + 0.125,
+          "bottom_right_lon": geo.coords.longitude  + 0.125
+        }
+      }
+      console.log(request)
+      const response = await fetchRestaurants(request)
       if(!response.data.items || !response.data.items.length)
         throw {type: 500}
       await dispatch({type:'LOAD_RESTAURANTS', payload: response.data.items})
@@ -14,7 +28,6 @@ export function bootstrap() {
         route: { key: 'menunico'}
       }
       dispatch({type: 'NAVIGATE_REPLACE', payload: navigate})
-      console.log(`Finished bootstrap in ${new Date() - date}ms`)
     } catch (e) {
       console.log('bootstrap failed with ', e)
       switch (e.type) {

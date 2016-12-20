@@ -34,6 +34,8 @@ export default class Restaurant extends Component {
   render() {
     const resto = this.props.restaurants[this.props.selected]
     const imageURL = 'https://s3.eu-central-1.amazonaws.com/menunico'
+    if(!this.state.images) return <View background='white' />
+    console.log(resto)
     return(
         <View align='stretch' padding={[60]}>
           <ScrollView removeClippedSubviews={false} showsVerticalScrollIndicator={false}>
@@ -92,20 +94,19 @@ export default class Restaurant extends Component {
                     <TextWithIcon icon='twitter' text={resto.contact[0].twitter} />
                   </View>}
                 </View>
-                {this.state.map && resto.address &&
+                {this.state.map && resto.location &&
                 <View align='stretch' flex={0} height={200}>
-
                     <MapView
                       style={styles.map}
                       initialRegion={{
-                        latitude: resto.address[0].location.lat,
-                        longitude: resto.address[0].location.lon,
+                        latitude: resto.location.lat,
+                        longitude: resto.location.lon,
                         latitudeDelta: 0.00922,
                         longitudeDelta: 0.00421,
                       }}>
                         <MapView.Marker coordinate={{
-                          latitude: resto.address[0].location.lat,
-                          longitude: resto.address[0].location.lon,
+                          latitude: resto.location.lat,
+                          longitude: resto.location.lon,
                         }} />
                     </MapView>
                 </View>

@@ -2,14 +2,19 @@ import React, { Component } from 'react'
 import { View } from 'menunico/src/components/layout'
 import { Navigator } from 'menunico/src/composites/navigation'
 import { Text } from 'menunico/src/components/type'
-import {Button} from 'react-native'
+import {Button, InteractionManager} from 'react-native'
 import {connect} from 'react-redux'
 import {CheckBox} from 'menunico/src/components/interactive'
 import Slider from '@ptomasroos/react-native-multi-slider'
 import {filterRestaurants} from 'menunico/src/actions/restaurants'
 
 class Filters extends Component {
-
+  constructor(){
+    super()
+    this.state = {
+      loaded: false
+    }
+  }
   render() {
     return (
       <View background='white' margin={[60]} align='stretch'>

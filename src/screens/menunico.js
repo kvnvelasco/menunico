@@ -5,6 +5,7 @@ import Restaurants from './restaurants'
 import Restaurant from './restaurant'
 import Menu from './menu'
 import Filters from './filters'
+import Map from './map'
 import { TextInput, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import {Text} from 'menunico/src/components/type'
@@ -26,7 +27,9 @@ class Menunico extends Component {
       && this.props.navigator.depth
     const navbarStyle = (this.props.navigator
       && this.props.navigator.currentRoute.navbar )|| {}
-    const back = <TouchableOpacity onPress={this._backHandler.bind(this)}>
+    const back = <TouchableOpacity
+                hitSlop={ {top: 10, left: 10, bottom: 10, right: 10}}
+                onPress={this._backHandler.bind(this)}>
               <Icon name='arrow-back' size={24} color={navbarStyle.color || 'black'}/>
             </TouchableOpacity>
     return (
@@ -43,6 +46,7 @@ class Menunico extends Component {
             selected={this.props.selected}
             static={this.props.static}/>
           <Filters key='filters'/>
+          <Map restaurants={this.props.restaurants} key='map' />
         </Navigator>
         <View style={{position: 'absolute', left: 0, right: 0}}
           flex={0} height={60} direction='row'
@@ -53,7 +57,9 @@ class Menunico extends Component {
           background={navbarStyle.background}>
           {navbarState
             ? back
-            : <TouchableOpacity onPress={this.menu._open}>
+            : <TouchableOpacity
+                hitSlop={ {top: 10, left: 10, bottom: 10, right: 10}}
+               onPress={this.menu._open}>
                 <Icon name='menu' size={24} />
               </TouchableOpacity>
           }
