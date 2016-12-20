@@ -20,7 +20,6 @@ export default class menunico extends Component {
         <ConnectedNavigator id='main'>
           <Splash key='splash'/>
           <Menunico key='menunico'/>
-          <View key='restaurants' />
         </ConnectedNavigator>
       </Provider>
     );

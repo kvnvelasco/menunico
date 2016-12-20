@@ -21,8 +21,10 @@ api.interceptors.response.use(response => {
 
 export async function fetchRestaurants() {
   try {
-    console.log('Starting Restaurant Fetch')
-    return await api.post('search', {})
+    const response = await api.post('search', {})
+    if(response.data.size !== response.data.items.length)
+      throw {status: 500}
+    return response
   } catch (e) {
     console.log(e.status)
     switch (e.status) {

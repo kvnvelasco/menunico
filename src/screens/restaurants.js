@@ -88,6 +88,7 @@ export default class Restaurants extends Component {
         {this.props.restaurants.length &&
           <ListView
             showsVerticalScrollIndicator={false}
+            initialListSize={this.props.restaurants.length}
             dataSource={data}
             renderRow={this._renderRestaurant.bind(this)} />
         }
