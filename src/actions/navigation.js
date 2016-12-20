@@ -5,9 +5,9 @@ export function push(navigator, route){
   }
 }
 
-export function pop(navigator) {
+export function pop() {
   return async dispatch => {
-    dispatch({type: 'NAVIGATE_PUSH', payload: navigator})
+    dispatch({type: 'NAVIGATE_POP'})
   }
 }
 

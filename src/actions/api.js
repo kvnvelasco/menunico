@@ -19,9 +19,9 @@ api.interceptors.response.use(response => {
 })
 
 
-export async function fetchRestaurants() {
+export async function fetchRestaurants(search={}) {
   try {
-    const response = await api.post('search', {})
+    const response = await api.post('search', search)
     if(response.data.size !== response.data.items.length)
       throw {status: 500}
     return response
@@ -41,3 +41,19 @@ export async function fetchRestaurants() {
     }
   }
 }
+
+
+// Search Parameters
+// {
+//    "origins" : ["African", "Mexican"],
+//    "types" : ["Vegeterian","Vegan"],
+//    "services" : ["Wifi", "Terrace"],
+//    "paymentmethods" : ["Cash", "Mastercard"],
+//    "address" : { "city" : "Barcelona",
+//                  "address" : "Rambla",
+//     "geobox" : { "top_left_lat" : 50.0,
+//                            "top_left_lon" : 5.0,
+//                               "bottom_rightlat"  :0.0,
+//                               "bottom_right_lon" : 50.0}
+//                   }
+//  }

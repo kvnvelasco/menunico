@@ -85,7 +85,10 @@ export class Navigator extends Component {
       return false
     }
 
-    const component = React.cloneElement(element, {dispatch: this.props.dispatch, route, navigator: {push, pop, replace}})
+    const boundPop = this.props.dispatch.bind(element, pop())
+
+    const component = React.cloneElement(element, {dispatch: this.props.dispatch, route,
+      navigator: {push, pop: boundPop, replace}})
     return {
       ...route,
       key: route.key,

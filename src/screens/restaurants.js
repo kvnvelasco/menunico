@@ -14,12 +14,15 @@ import moment from 'moment'
 export default class Restaurants extends Component {
   constructor(props) {
     super(props)
-     this.state = {
-       date: moment()
+    const ds = new ListView.DataSource({rowHasChanged: this._rowDiffHandler});
+    this.state = {
+       date: moment(),
+       ds,
+       data: ds.cloneWithRows(props.restaurants)
      };
   }
-  _rowDiffHandler() {
-
+  _rowDiffHandler(r1, r2) {
+    return r1.descriptions.mainid !== r2.descriptions.mainid
   }
 
   _navigateToRestaurant(index, name) {
@@ -39,14 +42,10 @@ export default class Restaurants extends Component {
     const {name, address, image} = row
     const imageURL = 'https://s3.eu-central-1.amazonaws.com/menunico'
     let cover = image && image[0] || null
-    const style = {
-      borderStyle: 'solid',
-      borderBottomWidth: 1,
-      borderColor: '#ccc'
-    }
+
     return (
       <TouchableOpacity delayPressOut={0} delayPressIn={0} onPress={this._navigateToRestaurant.bind(this, index, name)}>
-        <View style={style} align='stretch' padding={[20,0,5,0]} flex={0}>
+        <View align='stretch' padding={[20,0,5,0]} flex={0}>
           <View direction='row' align='center'>
             <View align='stretch'>
               <View height={150}>
@@ -74,10 +73,27 @@ export default class Restaurants extends Component {
     )
   }
 
+  _renderSeparator(section, row) {
+    const style = {
+      borderStyle: 'solid',
+      borderBottomWidth: 1,
+      borderColor: '#ccc'
+    }
+    return <View flex={0} key={row} style={style} />
+  }
+  _openFilters() {
+    const navigate = {
+      route: {
+        key: 'filters',
+        animation: 'FloatFromBottom',
+        title: 'Set Filters'
+      },
+      id: 'menunico'
+    }
+    this.props.dispatch({type: 'NAVIGATE_PUSH', payload: navigate})
+  }
 
   render(){
-    const ds = new ListView.DataSource({rowHasChanged: this._rowDiffHandler});
-    const data = this.props.restaurants.length && ds.cloneWithRows(this.props.restaurants)
     return (
       <View align='stretch' padding={[0,20,0,20]} margin={[60]}>
         <View flex={0} direction='row' justify='center' align='center' margin={[20,0,20]}>
@@ -89,20 +105,24 @@ export default class Restaurants extends Component {
           <ListView
             showsVerticalScrollIndicator={false}
             initialListSize={this.props.restaurants.length}
-            dataSource={data}
+            renderSeparator={this._renderSeparator}
+            dataSource={this.state.data}
             renderRow={this._renderRestaurant.bind(this)} />
         }
-        <View direction='row' align='center' justify='center' height={60} flex={0}>
-          <View flex={0} justify='space-between' width={200} direction='row'>
-            <View direction='row'>
+        <View direction='row'
+          justify='center' height={60} flex={0}>
+          <TouchableOpacity>
+            <View align='center' padding={[20,20,20,20]} direction='row'>
               <Icon name='place' size={24}/>
               <Text size={14}>Map View</Text>
             </View>
-            <View direction='row' justify='flex-end'>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._openFilters.bind(this)}>
+            <View align='center' padding={[20,20,20,20]} direction='row' justify='flex-end'>
               <Fa name='filter' size={24}/>
               <Text size={14}> Filters </Text>
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     )
