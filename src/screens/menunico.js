@@ -23,19 +23,11 @@ class Menunico extends Component {
   }
 
   render() {
-    const navbarState = (this.props.navigator
-      && this.props.navigator.depth)
-    // Override if shownavbarstate Todo: Make this not stupid
-    const showSearch = (this.props.navigator
-      && this.props.navigator.currentRoute.showSearch)
-
-    const navbarStyle = (this.props.navigator
-      && this.props.navigator.currentRoute.navbar )|| {}
-    const back = <TouchableOpacity
-                hitSlop={ {top: 10, left: 10, bottom: 10, right: 10}}
-                onPress={this._backHandler.bind(this)}>
-              <Icon name='arrow-back' size={24} color={navbarStyle.color || 'black'}/>
-            </TouchableOpacity>
+    const navigator = this.props.navigator || {}
+    const currentRoute = navigator.currentRoute || {}
+    const navbarStyle = currentRoute.navbar || {}
+    const navbarState = navigator.depth
+    const showSearch = currentRoute.showSearch
     return (
       <View align='stretch'>
         <Navigator
@@ -54,13 +46,17 @@ class Menunico extends Component {
         </Navigator>
         <View style={{position: 'absolute', left: 0, right: 0}}
           flex={0} height={60} direction='row'
-          align='center' justify={ (this.props.navigator &&
-            this.props.navigator.currentRoute.title) && !showSearch
-            ? 'flex-start' : 'space-between'}
+          align='center'
+          justify={currentRoute.title && !showSearch
+          ? 'flex-start' : 'space-between'}
           padding={[0,20,0,20]}
           background={navbarStyle.background || 'white'}>
           {navbarState
-            ? back
+            ? <TouchableOpacity
+                hitSlop={ {top: 10, left: 10, bottom: 10, right: 10}}
+                onPress={this._backHandler.bind(this)}>
+                <Icon name='arrow-back' size={24} color={navbarStyle.color || 'black'}/>
+              </TouchableOpacity>
             : <TouchableOpacity
                 hitSlop={ {top: 10, left: 10, bottom: 10, right: 10}}
                onPress={this.menu._open}>

@@ -21,10 +21,15 @@ export default class Restaurants extends Component {
        data: ds.cloneWithRows(props.restaurants)
      };
   }
+  componentWillReceiveProps(newProps,) {
+    if(newProps.restaurants === this.props.restaurants)
+      this.setState({
+        data: this.state.ds.cloneWithRows(newProps.restaurants)
+      })
+  }
   _rowDiffHandler(r1, r2) {
     return r1.descriptions.mainid !== r2.descriptions.mainid
   }
-
   _navigateToRestaurant(index, name) {
     const route = {
       key: 'restaurant',
@@ -37,7 +42,6 @@ export default class Restaurants extends Component {
     this.props.dispatch({type: 'SET_CURRENT_RESTAURANT', payload: index})
     this.props.dispatch(this.props.navigator.push('menunico', route))
   }
-
   _renderRestaurant(row, section, index) {
     const {name, address, image} = row
     const imageURL = 'https://s3.eu-central-1.amazonaws.com/menunico'
@@ -69,7 +73,6 @@ export default class Restaurants extends Component {
       </View>
     )
   }
-
   _renderSeparator(section, row) {
     const style = {
       borderStyle: 'solid',
@@ -90,7 +93,6 @@ export default class Restaurants extends Component {
     }
     this.props.dispatch({type: 'NAVIGATE_PUSH', payload: navigate})
   }
-
   _openMap() {
     const navigate = {
       route: {
@@ -105,7 +107,7 @@ export default class Restaurants extends Component {
 
   render(){
     return (
-      <View padding={[20,20,0,20]}
+      <View padding={[20,0,0,0]}
         background='white'
         align='stretch' margin={[60]}>
         <View flex={0} direction='row'
@@ -117,6 +119,11 @@ export default class Restaurants extends Component {
         </View>
         {this.props.restaurants.length &&
           <ListView
+            contentContainerStyle={{
+              overflow: 'hidden',
+              paddingLeft: 20,
+              paddingRight: 20
+            }}
             enableEmptySections={false}
             showsVerticalScrollIndicator={false}
             initialListSize={3}
@@ -131,28 +138,27 @@ export default class Restaurants extends Component {
             position: 'absolute',
             left: 0,
             right: 0,
-            bottom: 40
+            bottom: 60
           }}
-             flex={0}>
+          height={50}
+          flex={0}>
           <View
-            direction='row'
-            flex={0}
-            width={220}
-            justify='space-between'
+            direction='row' height={40}
+            flex={0} width={220} justify='space-between'
             style={{
-              borderColor: '#ccc',
+              borderColor: 'rgb(220, 220, 220)',
               borderStyle: 'solid',
               borderWidth: 1.5,
               borderRadius: 15,
             }}
-            background='white'
+            background='rgba(255,255,255,0.97)'
             padding={[0,20,0,20]}>
             <TouchableOpacity delayPressOut={0}
               onPress={this._openMap.bind(this)}>
               <View align='center'
                 padding={[5,0,5]}
                 style={{
-                  borderColor: '#ccc',
+                  borderColor: 'rgb(220, 220, 220)',
                   borderStyle: 'solid',
                   borderRightWidth: 1
                 }} width={90} direction='row'>

@@ -27,5 +27,10 @@ export function View(props, state){
     ...props.style
   }
 
-  return <NativeView pointerEvents={props.pointerEvents || 'auto'} style={style}>{props.children || null}</NativeView>
+  return <NativeView
+    elevation={props.elevation}
+    pointerEvents={props.pointerEvents || 'auto'}
+    style={style}>
+    {props.children || null}
+    </NativeView>
 }

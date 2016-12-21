@@ -21,6 +21,7 @@ api.interceptors.response.use(response => {
 
 export async function fetchRestaurants(search={}) {
   try {
+    console.log('fetch Start')
     const response = await api.post('search', search)
     if(response.data.size !== response.data.items.length)
       throw {status: 500}
