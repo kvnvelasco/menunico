@@ -4,7 +4,7 @@ import { Navigator } from 'menunico/src/composites/navigation'
 import { Text } from 'menunico/src/components/type'
 import {Button, InteractionManager} from 'react-native'
 import {connect} from 'react-redux'
-import {CheckBox} from 'menunico/src/components/interactive'
+import {CheckBox, CheckImage} from 'menunico/src/components/interactive'
 import Slider from '@ptomasroos/react-native-multi-slider'
 import {filterRestaurants} from 'menunico/src/actions/restaurants'
 
@@ -200,6 +200,7 @@ class Cuisine extends Component {
           </View>
         </View>
         <Button
+          color='#F2504B'
           onPress={this.props.navigator.pop}
           title='Save Cuisine Filters'/>
       </View>
@@ -268,6 +269,7 @@ class Preferences extends Component {
           </View>
         </View>
         <Button
+          color='#F2504B'
           onPress={this.props.navigator.pop}
           title='Save Preference Filters'/>
       </View>
@@ -295,55 +297,63 @@ class Payment extends Component {
           <View direction='row' flex={0}
             justify='space-between' align='center'>
             <Text>Cash</Text>
-            <CheckBox
+            <CheckImage
+              image={this.props.cards.cash}
               checked={this.props.filters.cash}
               handler={this.filterSelector.bind(this, 'cash', this.props.filters.cash)} />
           </View>
           <View direction='row' flex={0}
             justify='space-between' align='center'>
             <Text>Visa</Text>
-            <CheckBox
+            <CheckImage
+              image={this.props.cards.visa}
               checked={this.props.filters.visa}
               handler={this.filterSelector.bind(this, 'visa', this.props.filters.visa)} />
           </View>
           <View direction='row' flex={0}
             justify='space-between' align='center'>
             <Text>Master Card</Text>
-            <CheckBox
+            <CheckImage
+              image={this.props.cards.masterCard}
               checked={this.props.filters.masterCard}
               handler={this.filterSelector.bind(this, 'masterCard', this.props.filters.masterCard)} />
           </View>
           <View direction='row' flex={0}
             justify='space-between' align='center'>
             <Text>Maestro</Text>
-            <CheckBox
+            <CheckImage
+              image={this.props.cards.maestro}
               checked={this.props.filters.maestro}
               handler={this.filterSelector.bind(this, 'maestro', this.props.filters.maestro)} />
           </View>
           <View direction='row' flex={0}
             justify='space-between' align='center'>
-            <Text>AMerican Express</Text>
-            <CheckBox
+            <Text>American Express</Text>
+            <CheckImage
+              image={this.props.cards.amex}
               checked={this.props.filters.amex}
               handler={this.filterSelector.bind(this, 'amex', this.props.filters.amex)} />
           </View>
           <View direction='row' flex={0}
             justify='space-between' align='center'>
             <Text>Ticket Restaurant</Text>
-            <CheckBox
+            <CheckImage
+              image={this.props.cards.ticketRestaurant}
               checked={this.props.filters.ticketRestaurant}
               handler={this.filterSelector.bind(this, 'ticketRestaurant', this.props.filters.ticketRestaurant)} />
           </View>
           <View direction='row' flex={0}
             justify='space-between' align='center'>
             <Text>Sodexo</Text>
-            <CheckBox
+            <CheckImage
+              image={this.props.cards.sodexo}
               checked={this.props.filters.sodexo}
               handler={this.filterSelector.bind(this, 'sodexo', this.props.filters.sodexo)} />
           </View>
         </View>
         <Button
           onPress={this.props.navigator.pop}
+          color='#F2504B'
           title='Save Preference Filters'/>
       </View>
     )

@@ -7,8 +7,11 @@ import amex from '../static/cards/AmericanExpress-dark@3x.png'
 import cirrus from '../static/cards/Cirrus-dark@3x.png'
 import discover from '../static/cards/Discover-dark@3x.png'
 import masterCard from '../static/cards/MasterCard-dark@3x.png'
+import maestro from '../static/cards/Maestro-dark@3x.png'
 import visa from '../static/cards/Visa-dark@3x.png'
 import cash from '../static/cards/Cash-dark@3x.png'
+import sodexo from '../static/cards/Sodexo.png'
+import ticketRestaurant from '../static/cards/Ticket-Restaurant.jpg'
 
 // menu items
 import faq from '../static/menu/faq.png'
@@ -28,7 +31,10 @@ const initialState = {
     discover,
     masterCard,
     visa,
-    cash
+    cash,
+    maestro,
+    sodexo,
+    ticketRestaurant
   },
   menu: {
     faq,
