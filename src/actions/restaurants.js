@@ -28,7 +28,7 @@ export function filterRestaurants(filter){
       dispatch({type: 'NAVIGATE_POP'})
 
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
 }

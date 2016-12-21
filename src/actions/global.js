@@ -18,7 +18,6 @@ export function bootstrap() {
           "bottom_right_lon": geo.coords.longitude  + 0.125
         }
       }
-      console.log(request)
       const response = await fetchRestaurants(request)
       if(!response.data.items || !response.data.items.length)
         throw {type: 500}
