@@ -23,8 +23,12 @@ class Menunico extends Component {
   }
 
   render() {
-    const navbarState = this.props.navigator
-      && this.props.navigator.depth
+    const navbarState = (this.props.navigator
+      && this.props.navigator.depth)
+    // Override if shownavbarstate Todo: Make this not stupid
+    const showSearch = (this.props.navigator
+      && this.props.navigator.currentRoute.showSearch)
+
     const navbarStyle = (this.props.navigator
       && this.props.navigator.currentRoute.navbar )|| {}
     const back = <TouchableOpacity
@@ -50,8 +54,8 @@ class Menunico extends Component {
         </Navigator>
         <View style={{position: 'absolute', left: 0, right: 0}}
           flex={0} height={60} direction='row'
-          align='center' justify={ this.props.navigator &&
-            this.props.navigator.currentRoute.title
+          align='center' justify={ (this.props.navigator &&
+            this.props.navigator.currentRoute.title) && !showSearch
             ? 'flex-start' : 'space-between'}
           padding={[0,20,0,20]}
           background={navbarStyle.background || 'white'}>
@@ -63,7 +67,7 @@ class Menunico extends Component {
                 <Icon name='menu' size={24} />
               </TouchableOpacity>
           }
-            {navbarState
+            {navbarState && !showSearch
               ? <Text size={20} bold style={{marginLeft: 10}}>
                 {this.props.navigator.currentRoute.title || ''}</Text>
               : <TextInput underlineColorAndroid='#F2504B'
@@ -71,7 +75,7 @@ class Menunico extends Component {
                 style={{width: 240, fontSize: 14}}/>
             }
             {
-              navbarState
+              navbarState && !showSearch
               ? null
               : <Icon name='search' size={24} />
             }

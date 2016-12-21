@@ -83,7 +83,8 @@ export default class Restaurants extends Component {
       route: {
         key: 'filters',
         animation: 'FloatFromBottom',
-        title: 'Set Filters'
+        title: 'Set Filters',
+        showSearch: true
       },
       id: 'menunico'
     }
