@@ -3,6 +3,7 @@ import { Animated, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { View } from 'menunico/src/components/layout'
 import {Text} from 'menunico/src/components/type'
+import {TextWithImage} from 'menunico/src/composites/type'
 
 export default class Menu extends Component {
   constructor(){
@@ -48,11 +49,42 @@ export default class Menu extends Component {
             <Icon name='close' size={24}/>
           </TouchableOpacity>
         </View>
-        <View padding={[30]} flex={0} height={250} justify='space-between'>
-          <Text size={24} bold>Home</Text>
-          <Text size={24} bold>Favorites</Text>
-          <Text size={24} bold>Settings</Text>
-          <Text size={24} bold>FAQ</Text>
+        <View padding={[30]} flex={0} height={300} justify='space-between'>
+          <TextWithImage
+            size={24}
+            scale={2}
+            bold
+            image={this.props.icons.home}>
+            Home
+          </TextWithImage>
+          <TextWithImage
+            size={24}
+            scale={1}
+            bold
+            image={this.props.icons.heart}>
+            Favorites
+          </TextWithImage>
+          <TextWithImage
+            size={24}
+            scale={1}
+            bold
+            image={this.props.icons.setting}>
+            Settings
+          </TextWithImage>
+          <TextWithImage
+            size={24}
+            scale={1}
+            bold
+            image={this.props.icons.faq}>
+            FAQ
+          </TextWithImage>
+          <TextWithImage
+            size={24}
+            scale={1}
+            bold
+            image={this.props.icons.logout}>
+            Logout
+          </TextWithImage>
         </View>
       </View>
     </Animated.View>

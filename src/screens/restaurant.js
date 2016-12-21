@@ -35,7 +35,6 @@ export default class Restaurant extends Component {
     const resto = this.props.restaurants[this.props.selected]
     const imageURL = 'https://s3.eu-central-1.amazonaws.com/menunico'
     if(!this.state.images) return <View background='white' />
-    console.log(resto)
     return(
         <View align='stretch' padding={[60]}>
           <ScrollView removeClippedSubviews={false} showsVerticalScrollIndicator={false}>

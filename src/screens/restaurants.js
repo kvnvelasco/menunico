@@ -42,15 +42,12 @@ export default class Restaurants extends Component {
     const {name, address, image} = row
     const imageURL = 'https://s3.eu-central-1.amazonaws.com/menunico'
     let cover = image && image[0] || null
-
     return (
-      <TouchableOpacity delayPressOut={0} delayPressIn={0} onPress={this._navigateToRestaurant.bind(this, index, name)}>
-        <View align='stretch' padding={[20,0,5,0]} flex={0}>
-          <View direction='row' align='center'>
-            <View align='stretch'>
-              <View height={150}>
-                {cover && <Image full resizeMode='cover' source={{uri: `${imageURL}/${cover.url}/128x128/${cover.name}`}}/>}
-              </View>
+      <View align='stretch' flex={0} padding={[0,10,0,10]}>
+        <TouchableOpacity key='index' delayPressOut={0} delayPressIn={0} onPress={this._navigateToRestaurant.bind(this, index, name)}>
+          <View margin={[15]} direction='row' flex={0} align='center'>
+            <View align='stretch' width={150} height={150} flex={0}>
+              {cover && <Image full resizeMode='cover' source={{uri: `${imageURL}/${cover.url}/128x128/${cover.name}`}}/>}
             </View>
             <View margin={[0,0,0,10]}>
               <Text size={16} color='#F2504B'>{name}</Text>
@@ -65,11 +62,11 @@ export default class Restaurants extends Component {
               </View>
             </View>
           </View>
-          <View direction='row' justify='flex-end'>
+          <View direction='row' flex={0} justify='flex-end'>
             <Text>10€</Text>
           </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
     )
   }
 
@@ -107,35 +104,78 @@ export default class Restaurants extends Component {
 
   render(){
     return (
-      <View align='stretch' padding={[0,20,0,20]} margin={[60]}>
-        <View flex={0} direction='row' justify='center' align='center' margin={[20,0,20]}>
+      <View padding={[20,20,0,20]}
+        background='white'
+        align='stretch' margin={[60]}>
+        <View flex={0} direction='row'
+          justify='center' align='center'
+          margin={[20,0,20]}>
           <View background='#F2504B' round={40} align='center' padding={[5,15,5,15]} flex={0}>
             <Text size={14} white>{`Barcelona, ${this.state.date.format('dddd Do MMMM')}`}</Text>
           </View>
         </View>
         {this.props.restaurants.length &&
           <ListView
+            enableEmptySections={false}
             showsVerticalScrollIndicator={false}
-            initialListSize={this.props.restaurants.length}
+            initialListSize={3}
+            pageSize={2}
             renderSeparator={this._renderSeparator}
             dataSource={this.state.data}
             renderRow={this._renderRestaurant.bind(this)} />
         }
         <View direction='row'
-          justify='center' height={60} flex={0}>
-          <TouchableOpacity delayPressOut={0}
-            onPress={this._openMap.bind(this)}>
-            <View align='center' padding={[20,20,20,20]} direction='row'>
-              <Icon name='place' size={24}/>
-              <Text size={14}>Map View</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity delayPressOut={0} onPress={this._openFilters.bind(this)}>
-            <View align='center' padding={[20,20,20,20]} direction='row' justify='flex-end'>
-              <Fa name='filter' size={24}/>
-              <Text size={14}> Filters </Text>
-            </View>
-          </TouchableOpacity>
+          justify='center'
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            bottom: 40
+          }}
+             flex={0}>
+          <View
+            direction='row'
+            flex={0}
+            width={220}
+            justify='space-between'
+            style={{
+              borderColor: '#ccc',
+              borderStyle: 'solid',
+              borderWidth: 1.5,
+              borderRadius: 15,
+            }}
+            background='white'
+            padding={[0,20,0,20]}>
+            <TouchableOpacity delayPressOut={0}
+              onPress={this._openMap.bind(this)}>
+              <View align='center'
+                padding={[5,0,5]}
+                style={{
+                  borderColor: '#ccc',
+                  borderStyle: 'solid',
+                  borderRightWidth: 1
+                }} width={90} direction='row'>
+                <Text style={{
+                  marginBottom: 3,
+                  marginRight: 6
+                }} size={14}>Map</Text>
+                <Icon name='place' size={16}/>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity delayPressOut={0}
+              onPress={this._openFilters.bind(this)}>
+              <View align='center'
+                width={90}
+                 direction='row'
+                justify='flex-end'>
+                <Text style={{
+                  marginBottom: 2,
+                  marginRight: 6
+                }} size={14}> Filters </Text>
+                <Fa name='filter' size={16}/>
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     )

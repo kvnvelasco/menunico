@@ -54,7 +54,7 @@ class Menunico extends Component {
             this.props.navigator.currentRoute.title
             ? 'flex-start' : 'space-between'}
           padding={[0,20,0,20]}
-          background={navbarStyle.background}>
+          background={navbarStyle.background || 'white'}>
           {navbarState
             ? back
             : <TouchableOpacity
@@ -67,8 +67,8 @@ class Menunico extends Component {
               ? <Text size={20} bold style={{marginLeft: 10}}>
                 {this.props.navigator.currentRoute.title || ''}</Text>
               : <TextInput underlineColorAndroid='#F2504B'
-                placeholder='Search Restaurants'
-                style={{width: 200, fontSize: 14}}/>
+                placeholder='(Address, Restaurant, Dish)'
+                style={{width: 240, fontSize: 14}}/>
             }
             {
               navbarState
@@ -76,7 +76,8 @@ class Menunico extends Component {
               : <Icon name='search' size={24} />
             }
         </View>
-        <Menu ref={menu => this.menu = menu}/>
+        <Menu icons={this.props.static.menu}
+          ref={menu => this.menu = menu}/>
       </View>
     )
   }
