@@ -32,7 +32,7 @@ export default class Restaurant extends Component {
   }
 
   render() {
-    const resto = this.props.restaurants[this.props.selected]
+    const resto = this.props.restaurants[this.props.route.index]
     const imageURL = 'https://s3.eu-central-1.amazonaws.com/menunico'
     if(!this.state.images) return <View background='white' />
     return(

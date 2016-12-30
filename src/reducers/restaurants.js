@@ -41,6 +41,10 @@ export default function reducer(state=initialState, action) {
       }}
     case 'SET_CURRENT_RESTAURANT':
       return {...state, selected: action.payload}
+    case 'RESTAURANT_HIGHLIGHTED':
+      return {...state, highlighted: action.payload.id}
+    case 'RESTAURANT_CLEAR_HIGHLIGHTED':
+      return {...state, highlighted: null}
     default:
       return state
   }

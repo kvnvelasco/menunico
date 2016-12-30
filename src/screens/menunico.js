@@ -35,14 +35,15 @@ class Menunico extends Component {
           data={this.props.navigator}
           dispatch={this.props.dispatch}>
           <Restaurants key='restaurants'
-            restaurants={this.props.restaurants}
+            restaurants={this.props.restaurants.list}
             static={this.props.static}/>
           <Restaurant key='restaurant'
-            restaurants={this.props.restaurants}
-            selected={this.props.selected}
+            restaurants={this.props.restaurants.list}
             static={this.props.static}/>
           <Filters key='filters'/>
-          <Map restaurants={this.props.restaurants} key='map' />
+          <Map restaurants={this.props.restaurants.list}
+            highlighted={this.props.restaurants.highlighted}
+            key='map' />
         </Navigator>
         <View style={{position: 'absolute', left: 0, right: 0}}
           flex={0} height={60} direction='row'
@@ -85,7 +86,7 @@ class Menunico extends Component {
 
 export default connect( store => ({
   navigator: store.navigation.menunico,
-  restaurants: store.restaurants.list,
+  restaurants: store.restaurants,
   selected: store.restaurants.selected,
   static: store.static
 }))(Menunico)

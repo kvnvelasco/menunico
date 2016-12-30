@@ -33,13 +33,13 @@ export default class Restaurants extends Component {
   _navigateToRestaurant(index, name) {
     const route = {
       key: 'restaurant',
+      index: index,
       navbar: {
         title: name,
         'color': 'black',
         background: 'rgba(0,0,0,0.0)'
       }
     }
-    this.props.dispatch({type: 'SET_CURRENT_RESTAURANT', payload: index})
     this.props.dispatch(this.props.navigator.push('menunico', route))
   }
   _renderRestaurant(row, section, index) {
@@ -179,7 +179,7 @@ export default class Restaurants extends Component {
                   marginBottom: 2,
                   marginRight: 6
                 }} size={14}> Filters </Text>
-                <Fa name='filter' size={16}/>
+                <Icon name='tune' size={16}/>
               </View>
             </TouchableOpacity>
           </View>

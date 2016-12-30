@@ -1,4 +1,5 @@
 
+
 export function push(navigator, route){
   return async dispatch => {
     dispatch({type: 'NAVIGATE_PUSH', payload: {id: navigator, route}})

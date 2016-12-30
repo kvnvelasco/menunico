@@ -1,6 +1,5 @@
 import { fetchRestaurants } from './api'
 
-
 function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
@@ -30,5 +29,17 @@ export function filterRestaurants(filter){
     } catch (e) {
       console.error(e)
     }
+  }
+}
+
+export function geoSort(restaurants, coords) {
+  return async dispatch => {
+
+  }
+}
+
+export function highLightResto(resto, index) {
+  return async dispatch => {
+    dispatch({type: 'RESTAURANT_HIGHLIGHTED', payload: {id: resto.mainid, index}})
   }
 }

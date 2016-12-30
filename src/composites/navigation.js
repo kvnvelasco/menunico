@@ -49,53 +49,47 @@ export class Navigator extends Component {
     return true
   }
 
-  _clear() {
-    InteractionManager.runAfterInteractions(this._clearAction.call(this))
-  }
-
-  _clearAction(){
-    this.props.dispatch({type: 'NAVIGATOR_CLEAR_ACTION', payload: {id: this.id}})
-  }
-
   componentWillReceiveProps(newProps) {
-    if(!newProps.data) { return newProps}
+    if(newProps.data === this.props.data) {return false}
     switch (newProps.data.navigateAction) {
       case 'PUSH':
-        this.nav.push(newProps.data.currentRoute)
-        this._clear()
+        setTimeout(() => {
+          this.nav.push(newProps.data.currentRoute)
+        }, 0)
+        break
       case 'POP':
         if(this.props.data.final){
           BackAndroid.exitApp()
         }
-        this.nav.pop()
-        this._clear()
+        setTimeout(() => {
+          this.nav.pop()
+        }, 0)
         break
       case 'RESET_TO':
         this.nav.resetTo(newProps.data.currentRoute)
         // this.nav.immediatelyResetRouteStack([newProps.data.currentRoute])
-        this._clear()
       case 'REPLACE':
         this.nav.replace(newProps.data.currentRoute)
-        this._clear()
         break
       default:
         break
     }
   }
 
-  _assembleRoute(route){
+  _assembleRoute(route, nav){
     const element = this.props.children.find( item => {
-                      return item.key == route.key
+                      return item.key === route.key
                     })
-    // if(!element){
-    //   console.error(`no route found for ${route.key}`)
-    //   return false
-    // }
+    if(!element){
+      console.error(`no route found for ${route.key}`)
+      return false
+    }
 
     const boundPop = this.props.dispatch.bind(element, pop())
+    
+    const component = {...element, props: {...element.props, dispatch: this.props.dispatch,
+      route, navigator: {push, pop: boundPop, replace}}}
 
-    const component = React.cloneElement(element, {dispatch: this.props.dispatch, route,
-      navigator: {push, pop: boundPop, replace}})
     return {
       ...route,
       key: route.key,
@@ -108,8 +102,8 @@ export class Navigator extends Component {
     return NativeNavigator.SceneConfigs[route.animation || 'PushFromRight']
   }
 
-  _renderScene(route, navigator) {
-    const scene = this._assembleRoute(route)
+  _renderScene(nav, route, navigator) {
+    const scene = this._assembleRoute(route, nav)
     return scene.component
   }
 
@@ -117,8 +111,8 @@ export class Navigator extends Component {
     return <NativeNavigator
       configureScene={this._configureScene}
       initialRoute={this.initialRoute}
-      renderScene={this._renderScene.bind(this)}
+      renderScene={this._renderScene.bind(this, this.nav)}
       ref={ nav => this.nav = nav}
-      />
+    />
   }
 }
