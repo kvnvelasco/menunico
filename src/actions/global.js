@@ -8,15 +8,15 @@ const geoPromise = new Promise( (resolve, reject) => {
 export function bootstrap() {
   return async dispatch => {
     try {
-      const geo = await geoPromise
+      // const geo = await geoPromise
       await dispatch({type:'LOADING_RESTAURANTS'})
       const request = {
-        "geobox" : {
-          "top_left_lat":     geo.coords.latitude   - 0.125,
-          "top_left_lon":     geo.coords.longitude  - 0.125,
-          "bottom_right_lat": geo.coords.latitude   + 0.125,
-          "bottom_right_lon": geo.coords.longitude  + 0.125
-        }
+        // "geobox" : {
+        //   "top_left_lat":     geo.coords.latitude   - 0.125,
+        //   "top_left_lon":     geo.coords.longitude  - 0.125,
+        //   "bottom_right_lat": geo.coords.latitude   + 0.125,
+        //   "bottom_right_lon": geo.coords.longitude  + 0.125
+        // }
       }
       const response = await fetchRestaurants(request)
       if(!response.data.items || !response.data.items.length)

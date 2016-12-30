@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 import { TextWithIcon } from 'menunico/src/composites/type'
 import MapView from 'react-native-maps'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
 
 const styles = StyleSheet.create({
   map: {
@@ -31,17 +31,31 @@ export default class Restaurant extends Component {
     });
   }
 
+  _renderBanner(image) {
+    const imageURL = 'https://s3.eu-central-1.amazonaws.com/menunico'
+    const {height, width} = Dimensions.get('window')
+    return <View width={width} background='blue'>
+      <Image resizeMode='cover' full
+      source={{uri: `${imageURL}/${image.url}/normal/${image.name}`}} />
+    </View>
+
+
+  }
+
   render() {
     const resto = this.props.restaurants[this.props.route.index]
-    const imageURL = 'https://s3.eu-central-1.amazonaws.com/menunico'
     if(!this.state.images) return <View background='white' />
     return(
         <View align='stretch' padding={[60]}>
           <ScrollView removeClippedSubviews={false} showsVerticalScrollIndicator={false}>
               <View align='stretch' background='white'>
-                <View flex={0} height={200} align='stretch'>
-                  {this.state.images && resto.image.length && <Image full resizeMode='cover'
-                    source={{uri: `${imageURL}/${resto.image[0].url}/normal/${resto.image[0].name}`}} />}
+                <View flex={0} height={275} align='stretch'>
+                  {this.state.images && resto.image.length &&
+                    <ScrollView horizontal={true}
+                      pagingEnabled={true}
+                      style={{backgroundColor: 'green'}}>
+                      {resto.image.map(this._renderBanner)}
+                    </ScrollView>}
                 </View>
                 <View flex={0} align='center' direction='row' justify='space-between' padding={[20,20,20,20]}>
                   <Text size={24} bold color='#F2504B'>{resto.name}</Text>
