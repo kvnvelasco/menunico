@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View } from 'menunico/src/components/layout'
 import { Navigator } from 'menunico/src/composites/navigation'
 import { Text } from 'menunico/src/components/type'
-import {Button, InteractionManager} from 'react-native'
+import {Button} from 'react-native'
 import {connect} from 'react-redux'
 import {CheckBox, CheckImage} from 'menunico/src/components/interactive'
 import Slider from '@ptomasroos/react-native-multi-slider'
@@ -24,7 +24,7 @@ class Filters extends Component {
           data={this.props.navigator} >
           <Home filters={this.props.filters} key='home'/>
           <Cuisine filters={this.props.filters.cuisine || {}} key='cuisine'/>
-          <Preferences key='preferences' filters={this.props.filters.preferences || {}} />
+          <Preferences key='preferences' prefs={this.props.prefs} filters={this.props.filters.preferences || {}} />
           <Payment key='payment'
             cards={this.props.cards}
             filters={this.props.filters.payment || {}} />
@@ -37,7 +37,8 @@ class Filters extends Component {
 export default connect( store => ({
   navigator: store.navigation.filters,
   filters: store.restaurants.filters || {},
-  cards: store.static.payment
+  cards: store.static.payment,
+  prefs: store.static.filters
 }))(Filters)
 
 
@@ -76,7 +77,7 @@ class Home extends Component {
 
         <Button
           onPress={this._navigateToFilter.bind(this, 'cuisine')}
-          title='Edit' color='#59B043'/>
+          title='Add' color='#F2504B'/>
       </View>
       <View direction='row' flex={0}
         justify='space-between' align='center'>
@@ -91,7 +92,7 @@ class Home extends Component {
         </View>
         <Button
           onPress={this._navigateToFilter.bind(this, 'preferences')}
-          title='Edit' color='#59B043'/>
+          title='Add' color='#F2504B'/>
       </View>
       <View direction='row' flex={0}
         justify='space-between' align='center'>
@@ -106,7 +107,7 @@ class Home extends Component {
         </View>
         <Button
           onPress={this._navigateToFilter.bind(this, 'payment')}
-          title='Edit' color='#59B043'/>
+          title='Add' color='#F2504B'/>
       </View>
 
       <View flex={0}
@@ -132,7 +133,7 @@ class Home extends Component {
       </View>
       <Button
         onPress={this._filter.bind(this)}
-        title='Set Filters' color='#F2504B'/>
+        title='Explore Restaurants' color='#F2504B'/>
      </View>
   }
 }
@@ -145,6 +146,9 @@ class Cuisine extends Component {
       value: !value
     }
     this.props.dispatch({type:'TOGGLE_FILTER', payload})
+  }
+  _reset(name) {
+    this.props.dispatch({type: 'RESET_FILTER', payload: name})
   }
   render() {
     console.log(this.props)
@@ -200,9 +204,9 @@ class Cuisine extends Component {
           </View>
         </View>
         <Button
+          onPress={e => this.props.navigator.pop()}
           color='#F2504B'
-          onPress={this.props.navigator.pop}
-          title='Save Cuisine Filters'/>
+          title='Save Filters'/>
       </View>
     )
   }
@@ -217,6 +221,9 @@ class Preferences extends Component {
     }
     this.props.dispatch({type:'TOGGLE_FILTER', payload})
   }
+  _reset(name) {
+    this.props.dispatch({type: 'RESET_FILTER', payload: name})
+  }
   render() {
     return (
       <View align='stretch' padding={[20,20,20,20]} background='white'>
@@ -228,50 +235,74 @@ class Preferences extends Component {
           <View direction='row' flex={0}
             justify='space-between' align='center'>
             <Text>Vegetarian</Text>
-            <CheckBox
+            <CheckImage
+              height={30}
+              width={30}
+              resize='cover'
+              image={this.props.prefs.vegetarian}
               checked={this.props.filters.vegetarian}
               handler={this.filterSelector.bind(this, 'vegetarian', this.props.filters.vegetarian)} />
           </View>
           <View direction='row' flex={0}
             justify='space-between' align='center'>
             <Text>Bio</Text>
-            <CheckBox
+            <CheckImage
+              height={30}
+              width={30}
+              resize='cover'
+              image={this.props.prefs.bio}
               checked={this.props.filters.bio}
               handler={this.filterSelector.bind(this, 'bio', this.props.filters.bio)} />
           </View>
           <View direction='row' flex={0}
             justify='space-between' align='center'>
             <Text>Lactose Free</Text>
-            <CheckBox
+            <CheckImage
+              height={30}
+              width={30}
+              resize='cover'
+              image={this.props.prefs.lactose}
               checked={this.props.filters.lactose}
               handler={this.filterSelector.bind(this, 'lactose', this.props.filters.lactose)} />
           </View>
           <View direction='row' flex={0}
             justify='space-between' align='center'>
             <Text>Ecologic</Text>
-            <CheckBox
+            <CheckImage
+              height={30}
+              width={30}
+              resize='cover'
+              image={this.props.prefs.ecologic}
               checked={this.props.filters.ecologic}
               handler={this.filterSelector.bind(this, 'ecologic', this.props.filters.ecologic)} />
           </View>
           <View direction='row' flex={0}
             justify='space-between' align='center'>
             <Text>Vegan</Text>
-            <CheckBox
+            <CheckImage
+              height={30}
+              width={30}
+              resize='cover'
+              image={this.props.prefs.vegan}
               checked={this.props.filters.vegan}
               handler={this.filterSelector.bind(this, 'vegan', this.props.filters.vegan)} />
           </View>
           <View direction='row' flex={0}
             justify='space-between' align='center'>
             <Text>Gluten Free</Text>
-            <CheckBox
+            <CheckImage
+              height={30}
+              width={30}
+              resize='cover'
+              image={this.props.prefs.gluten}
               checked={this.props.filters.gluten}
               handler={this.filterSelector.bind(this, 'gluten', this.props.filters.gluten)} />
           </View>
         </View>
         <Button
+          onPress={e => this.props.navigator.pop()}
           color='#F2504B'
-          onPress={this.props.navigator.pop}
-          title='Save Preference Filters'/>
+          title='Save Filters'/>
       </View>
     )
   }
@@ -285,6 +316,10 @@ class Payment extends Component {
       value: !value
     }
     this.props.dispatch({type:'TOGGLE_FILTER', payload})
+  }
+
+  _reset(name) {
+    this.props.dispatch({type: 'RESET_FILTER', payload: name})
   }
   render() {
     return (
@@ -352,9 +387,9 @@ class Payment extends Component {
           </View>
         </View>
         <Button
-          onPress={this.props.navigator.pop}
+          onPress={e => this.props.navigator.pop()}
           color='#F2504B'
-          title='Save Preference Filters'/>
+          title='Save Filters'/>
       </View>
     )
   }

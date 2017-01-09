@@ -5,11 +5,12 @@ import {Text} from 'menunico/src/components/type'
 
 import { ListView, TouchableOpacity } from 'react-native'
 
-
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Fa from 'react-native-vector-icons/FontAwesome'
 
 import moment from 'moment'
+import {openFilters} from 'menunico/src/actions/global'
+import { openRestaurant } from 'menunico/src/actions/restaurants'
 
 export default class Restaurants extends Component {
   constructor(props) {
@@ -31,16 +32,7 @@ export default class Restaurants extends Component {
     return r1.descriptions.mainid !== r2.descriptions.mainid
   }
   _navigateToRestaurant(index, name) {
-    const route = {
-      key: 'restaurant',
-      index: index,
-      navbar: {
-        title: name,
-        'color': 'black',
-        background: 'rgba(0,0,0,0.0)'
-      }
-    }
-    this.props.dispatch(this.props.navigator.push('menunico', route))
+    this.props.dispatch(openRestaurant(index, name))
   }
   _renderRestaurant(row, section, index) {
     const {name, address, image} = row
@@ -81,18 +73,7 @@ export default class Restaurants extends Component {
     }
     return <View flex={0} key={row} style={style} />
   }
-  _openFilters() {
-    const navigate = {
-      route: {
-        key: 'filters',
-        animation: 'FloatFromBottom',
-        title: 'Set Filters',
-        showSearch: true
-      },
-      id: 'menunico'
-    }
-    this.props.dispatch({type: 'NAVIGATE_PUSH', payload: navigate})
-  }
+
   _openMap() {
     const navigate = {
       route: {
@@ -170,7 +151,7 @@ export default class Restaurants extends Component {
               </View>
             </TouchableOpacity>
             <TouchableOpacity delayPressOut={0}
-              onPress={this._openFilters.bind(this)}>
+              onPress={e => this.props.dispatch(openFilters())}>
               <View align='center'
                 width={90}
                  direction='row'

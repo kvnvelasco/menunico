@@ -88,8 +88,8 @@ android {
 
     defaultConfig {
         applicationId "com.menunico"
-        minSdkVersion 16
-        targetSdkVersion 22
+        minSdkVersion 18
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         ndk {
@@ -135,6 +135,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-heading')
     compile project(':react-native-maps')
     compile project(':react-native-vector-icons')
     compile project(':react-native-localization')

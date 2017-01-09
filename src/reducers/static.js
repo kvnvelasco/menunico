@@ -1,6 +1,7 @@
 import swoosh from '../static/swoosh.png'
 import demoCover from '../static/resto.png'
-
+import sampleDish from '../static/dish.png'
+import loadingRestaurant from '../static/loading.png'
 // Cards
 import diners from '../static/cards/DinersClub-dark@3x.png'
 import amex from '../static/cards/AmericanExpress-dark@3x.png'
@@ -21,9 +22,19 @@ import home from '../static/menu/home.png'
 import logout from '../static/menu/logout.png'
 import profile from '../static/menu/profile.png'
 
+// Filters
+import bio from '../static/bio.png'
+import gluten from '../static/gluten-free.png'
+import lactose from '../static/lactose-free.png'
+import vegan from '../static/vegan.png'
+import vegetarian from '../static/vegetarian.png'
+import ecologic from '../static/ecologic.png'
+
 const initialState = {
   swoosh,
   demoCover,
+  sampleDish,
+  loadingRestaurant,
   payment: {
     diners,
     amex,
@@ -43,7 +54,15 @@ const initialState = {
     home,
     logout,
     profile
-  }
+  },
+   filters: {
+     bio,
+     gluten,
+     lactose,
+     vegan,
+     vegetarian,
+     ecologic
+   }
 }
 
 export default function reducer(state=initialState, action) {

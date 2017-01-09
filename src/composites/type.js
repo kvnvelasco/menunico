@@ -26,11 +26,21 @@ export function TextWithImage(props, state){
           width={60} source={props.image}/>
       </View>
       <Text
+
         bold={props.bold}
         color={props.color}
         size={size} >
         {props.text || props.children}
       </Text>
+    </View>
+  )
+}
+
+export function ParagraphText(props, state) {
+  return(
+    <View flex={0} margin={[0,0,15]}>
+      <Text size={16} bold>{props.heading}</Text>
+      <Text size={props.size} lines={20}>{props.children || props.content}</Text>
     </View>
   )
 }

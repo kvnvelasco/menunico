@@ -21,13 +21,13 @@ api.interceptors.response.use(response => {
 
 export async function fetchRestaurants(search={}) {
   try {
-    console.log('fetch Start')
     const response = await api.post('search', search)
     if(response.data.size !== response.data.items.length)
       throw {status: 500}
-    return response
+    const validatedResponse = response.data.items.filter(restaurantValidator)
+    return validatedResponse
   } catch (e) {
-    console.log(e.status)
+    console.logException(e)
     switch (e.status) {
       case undefined:
         throw {type: 204, message: 'No Response from Server', error: e}
@@ -38,8 +38,20 @@ export async function fetchRestaurants(search={}) {
       case 503:
         throw {type: 503, message: 'Bad Response from Server'}
       default:
-        console.error('Fetch Restaurants Error', e)
+        throw new Error('Unknown error occured during fetch restaurants')
     }
+  }
+}
+
+function restaurantValidator(item) {
+  try {
+    const name = item.hasOwnProperty('name')
+    const id = item.hasOwnProperty('mainid')
+    const location = item.hasOwnProperty('location') && typeof item.location === 'object'
+    const latlng = typeof item.location.lat === 'number' && typeof item.location.lon === 'number'
+    return (name && id && location && latlng)
+  } catch (e) {
+    return false
   }
 }
 

@@ -3,29 +3,63 @@ import { View } from 'menunico/src/components/layout'
 import { Text } from 'menunico/src/components/type'
 import { Image } from 'menunico/src/components/media'
 import MapView from 'react-native-maps'
-import { StyleSheet, Button, ScrollView, InteractionManager, TouchableOpacity} from 'react-native'
+import { StyleSheet, Button, ScrollView, InteractionManager, TouchableOpacity, Animated} from 'react-native'
 import { debounce } from 'lodash'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Fa from 'react-native-vector-icons/FontAwesome'
 // actions
 import {geoSort, highLightResto} from 'menunico/src/actions/restaurants'
+import {logHeading, stopLogHeading, openFilters} from 'menunico/src/actions/global'
 
 export default class Map extends Component {
   constructor() {
     super()
     this.map = {}
-    this.state = {map: false}
+    this.state = {map: false, currRotation: new Animated.Value(0)}
     this.pins = {}
     this._sortRestaurants = this._sortRestaurants.bind(this)
   }
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
+      this.props.dispatch(logHeading())
       this.setState({map: true})
     });
   }
 
+  _getDistanceAndDirectionObject(restaurantCoords) {
+    // get distance in degrees
+
+    const user = this.props.location
+    const dist = Math.sqrt(Math.pow(restaurantCoords.lon - user.longitude, 2) + Math.pow(restaurantCoords.lat - user.latitude, 2))
+    let conversionFactor
+    switch(true) {
+      case Math.abs(user.latitude) > 67 :
+        conversionFactor = 43496
+        break
+      case Math.abs(user.latitude) >45 :
+        conversionFactor = 78710
+        break
+      case Math.abs(user.latitude) >23 :
+        conversionFactor = 102470
+        break
+      default:
+        conversionFactor = 111320
+    }
+    const distance = dist * conversionFactor
+    const dLong = restaurantCoords.lon - user.longitude
+
+    const x = Math.cos(restaurantCoords.lat) * Math.sin(dLong)
+
+    const y = Math.cos(user.latitude) * Math.sin(restaurantCoords.lat) - Math.sin(user.latitude) * Math.cos(restaurantCoords.lat) * Math.cos(restaurantCoords.lon - user.longitude)
+
+    let angle = Math.atan2(y, x) * (180 / Math.PI)
+    angle = (angle - 90) % 360
+    return {angle: angle - this.props.heading, distance: distance|0}
+  }
+
   componentWillUnmount() {
+    stopLogHeading()
     this.props.dispatch({type: 'RESTAURANT_CLEAR_HIGHLIGHTED'})
   }
   _sortRestaurants(coords) {
@@ -71,15 +105,26 @@ export default class Map extends Component {
     const highlighted = resto.mainid === this.props.highlighted
     const handler = highlighted ? this._openRestaurant.bind(this, resto.name, index)
     : this._moveToMarker.bind(this, resto, index)
+    const {distance, angle} = this._getDistanceAndDirectionObject(resto.location)
+    const rotator = {
+      flex: 0,
+      transform: [
+        {rotate: `${angle}deg`}
+      ]
+    }
     return (
       <TouchableOpacity key={index} onPress={handler}>
         <View round={2} background={highlighted ? '#F2504B' : '#f7f7f7'} width={200} align='stretch' padding={[20,20,20,20]} margin={[5,5,5,5]}>
-          {resto.image.length && <Image width={160} height={98} resizeMode='cover'
-            source={{uri: `${imageURL}/${resto.image[0].url}/normal/${resto.image[0].name}`}} />}
+          {resto.image.length
+            ? <Image width={160} height={98} resizeMode='cover'
+              source={{uri: `${imageURL}/${resto.image[0].url}/normal/${resto.image[0].name}`}} />
+            : null}
           {highlighted &&
             <View background='rgba(242, 80, 75, 0.8)' align='center' justify='center' style={{position: 'absolute', top: 20, left: 20}} width={160} height={98}>
-              <Icon name='arrow-upward' size={36} color='white'/>
-              <Text size={12} color='white'>Tap to view</Text>
+              <View style={rotator}>
+                <Icon name='arrow-upward' size={36} color='white'/>
+              </View>
+              <Text size={12} color='white'>{distance}m</Text>
             </View>
           }
           <View direction='row' justify='space-between'>
@@ -118,18 +163,6 @@ export default class Map extends Component {
     this.restaurants.scrollTo({y: 0, x:index*200})
   }
 
-  _openFilters() {
-    const navigate = {
-      route: {
-        key: 'filters',
-        animation: 'FloatFromBottom',
-        title: 'Set Filters',
-        showSearch: true
-      },
-      id: 'menunico'
-    }
-    this.props.dispatch({type: 'NAVIGATE_PUSH', payload: navigate})
-  }
 
   render(){
     return (
@@ -139,8 +172,8 @@ export default class Map extends Component {
             <MapView
               onRegionChangeComplete={this._sortRestaurants}
               initialRegion={{
-                latitude: 	41.390205,
-                longitude: 2.154007,
+                latitude: 	this.props.location.latitude,
+                longitude: this.props.location.longitude,
                 latitudeDelta: 0.125,
                 longitudeDelta: 0.125
               }}
@@ -159,7 +192,7 @@ export default class Map extends Component {
           }
           <View flex={0} justify='flex-end' align='center' height={30} margin={[0,0,40]} style={{bottom: 50, position: 'absolute', right:0, left:0}}>
             <TouchableOpacity delayPressOut={0}
-              onPress={this._openFilters.bind(this)}>
+              onPress={e => this.props.dispatch(openFilters())}>
               <View direction='row' justify='space-between' align='center' padding={[0,15,0,15]} flex={0} round={40} background='white' style={{
                 height: 30,
                 width: 90,

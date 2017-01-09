@@ -28,6 +28,7 @@ export function View(props, state){
   }
 
   return <NativeView
+    {...(props.pans || {})}
     elevation={props.elevation}
     pointerEvents={props.pointerEvents || 'auto'}
     style={style}>
