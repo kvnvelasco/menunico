@@ -3,14 +3,14 @@ import { View } from 'menunico/src/components/layout'
 import { Image } from 'menunico/src/components/media'
 import {Text} from 'menunico/src/components/type'
 
-import { ListView, TouchableOpacity } from 'react-native'
+import { ListView, TouchableOpacity, RefreshControl } from 'react-native'
 
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Fa from 'react-native-vector-icons/FontAwesome'
 
 import moment from 'moment'
 import {openFilters} from 'menunico/src/actions/global'
-import { openRestaurant } from 'menunico/src/actions/restaurants'
+import { openRestaurant, filterRestaurants } from 'menunico/src/actions/restaurants'
 
 export default class Restaurants extends Component {
   constructor(props) {
@@ -19,6 +19,7 @@ export default class Restaurants extends Component {
     this.state = {
        date: moment(),
        ds,
+       refreshing: false,
        data: ds.cloneWithRows(props.restaurants)
      };
   }
@@ -37,7 +38,7 @@ export default class Restaurants extends Component {
   _renderRestaurant(row, section, index) {
     const {name, address, image} = row
     const imageURL = 'https://s3.eu-central-1.amazonaws.com/menunico'
-    let cover = image && image[0] || null
+    let cover = row.mainImage
     return (
       <View align='stretch' flex={0} padding={[0,10,0,10]}>
         <TouchableOpacity key='index' delayPressOut={0} delayPressIn={0} onPress={this._navigateToRestaurant.bind(this, index, name)}>
@@ -79,11 +80,16 @@ export default class Restaurants extends Component {
       route: {
         key: 'map',
         animation: 'FloatFromBottom',
-        title: 'Restaurant Map View'
+        title: 'Restaurant Map View',
+        showSearch: true
       },
       id: 'menunico'
     }
     this.props.dispatch({type: 'NAVIGATE_PUSH', payload: navigate})
+  }
+
+  _onRefresh() {
+    this.props.dispatch(filterRestaurants())
   }
 
   render(){
@@ -111,7 +117,13 @@ export default class Restaurants extends Component {
             pageSize={2}
             renderSeparator={this._renderSeparator}
             dataSource={this.state.data}
-            renderRow={this._renderRestaurant.bind(this)} />
+            renderRow={this._renderRestaurant.bind(this)}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.props.fetching}
+                onRefresh={this._onRefresh.bind(this)}
+              />
+            }/>
         }
         <View direction='row'
           justify='center'

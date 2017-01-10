@@ -15,6 +15,7 @@ function serialize(obj={}) {
 export function filterRestaurants(filter, searchText){
   return async dispatch => {
     try {
+      dispatch({type: 'FETCHING_RESTAURANTS'})
       let post = {}
       if(filter) {
         post.origins = serialize(filter.cuisine)
@@ -30,7 +31,6 @@ export function filterRestaurants(filter, searchText){
       }
       const response = await fetchRestaurants(post)
       dispatch({type:'LOAD_RESTAURANTS', payload:response })
-      dispatch({type: 'NAVIGATE_POP'})
     } catch (e) {
       console.logException(e)
     }

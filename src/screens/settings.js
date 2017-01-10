@@ -7,6 +7,7 @@ import {Button, InteractionManager, TouchableOpacity, ScrollView} from 'react-na
 import {connect} from 'react-redux'
 import {CheckBox, CheckImage} from 'menunico/src/components/interactive'
 
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 class Settings extends Component {
   render() {
@@ -17,9 +18,11 @@ class Settings extends Component {
           data={this.props.navigator}
           dispatch={this.props.dispatch}>
           <Home key='home'/>
+          <Communication key='communication' />
           <About key='about'/>
           <Terms key='terms' />
           <Privacy key='privacy' />
+          <Version key='version' />
         </Navigator>
       </View>
     )
@@ -41,7 +44,7 @@ class Home extends Component {
     return (
       <View padding={[20,20,20,20]} align='stretch' background='white'>
         <Text align='center' size={20} color='#F44E3F'>Settings</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={this._navigateTo.bind(this, 'communication')}>
           <View direction='row' align='stretch' justify='space-between' flex={0} margin={[20,0,20]}>
             <Text size={17}>Communication</Text>
           </View>
@@ -51,11 +54,48 @@ class Home extends Component {
             <Text size={17}>About</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={e => this.props.navigator.pop()}>
           <View direction='row' align='stretch' justify='space-between'  flex={0} margin={[60,0,20]}>
             <Text size={17}>Log Out</Text>
           </View>
         </TouchableOpacity>
+      </View>
+    )
+  }
+}
+
+class Communication extends Component {
+
+  render() {
+    return (
+      <View background='white' align='stretch' padding={[20,30,20,30]}>
+        <View direction='row' flex={0} margin={[]}>
+          <View flex={0} margin={[4, 10]}>
+            <Icon name='place' size={16}/>
+          </View>
+          <Text>
+            <Text bold>Address:</Text>
+            {" Carrer Torrent d’en Vidalet 21, 08012, Barcelona, Spain"}
+          </Text>
+        </View>
+        <View direction='row' flex={0} margin={[20]}>
+          <View flex={0} margin={[4, 10]}>
+            <Icon name='phone' size={16}/>
+          </View>
+          <Text>
+            <Text bold>Phone:</Text>
+            {" (0034) 644 234 633"}
+          </Text>
+        </View>
+        <View direction='row' flex={0} margin={[20]}>
+          <View flex={0} margin={[4, 10]}>
+            <Icon name='mail' size={16}/>
+          </View>
+          <Text>
+            <Text bold> Email: </Text>
+            {" info@menunico.es"}
+          </Text>
+        </View>
       </View>
     )
   }
@@ -82,10 +122,7 @@ class About extends Component {
             <Text>Data Privacy</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={
-          console.log(null)
-          // this._navigateTo.bind(this, 'version')
-          }>
+        <TouchableOpacity onPress={this._navigateTo.bind(this, 'version')}>
           <View direction='row' align='stretch' justify='space-between'  flex={0} margin={[20,0,20]}>
             <Text>Version</Text>
           </View>
@@ -329,6 +366,16 @@ class Privacy extends Component {
         </ScrollView>
       </View>
 
+    )
+  }
+}
+
+class Version extends Component {
+  render() {
+    return (
+      <View background='white' padding={[20,20,20,20]}>
+        <Text>Menunico V 0.2.4</Text>
+      </View>
     )
   }
 }

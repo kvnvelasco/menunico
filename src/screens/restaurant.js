@@ -17,10 +17,12 @@ export default class Restaurant extends Component {
   componentDidMount() {
     const {width} = Dimensions.get('window')
     const index = this.props.route.index
-    this.restaurant.scrollTo({x: width*index}, false)
+    setTimeout(x => {
+      this.restaurant.scrollTo({x: width*index}, false)
+    }, 0)
   }
   _rowDiffHandler(r1, r2) {
-    return r1.descriptions.mainid !== r2.descriptions.mainid
+    return r1mainid !== r2.mainid
   }
 
 
@@ -36,8 +38,7 @@ export default class Restaurant extends Component {
     return(
         <ListView horizontal={true}
           ref={restaurant => this.restaurant = restaurant}
-          onStartShouldSetResponder={e => false}
-          enableEmptySections={false}
+          enableEmptySections={true}
           pageSize={1}
           initialListSize={2}
           pagingEnabled={true}

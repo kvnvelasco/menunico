@@ -49,6 +49,7 @@ class Menunico extends Component {
           dispatch={this.props.dispatch}>
           <Restaurants key='restaurants'
             restaurants={this.props.restaurants.list}
+            fetching={this.props.restaurants.fetching}
             static={this.props.static}/>
           <Restaurant key='restaurant'
             restaurants={this.props.restaurants.list}

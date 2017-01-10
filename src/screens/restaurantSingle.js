@@ -76,7 +76,7 @@ export default class RestaurantSingle extends Component {
     return (
       <View key={index} align='center' width={this.width} margin={[0,0,20]}>
         {this._renderDish('First Dish', 'Duck dragee with sauteed kiwi and Japanese miso sauce.', 0)}
-        {this._renderDish('Second Dish', 'Beef fillet with foie, crystallized mushrooms.', 1)}
+        {this._renderDish('Main Dish', 'Beef fillet with foie, crystallized mushrooms.', 1)}
         {this._renderDish('Dessert', 'Tiramisu with salted caramel', 2)}
       </View>
     )
@@ -153,7 +153,7 @@ export default class RestaurantSingle extends Component {
     const resto = this.props.restaurant
     if(!this.state.images) return <View width={this.width} background='white' />
     return (
-      <View key={resto.mainid} width={this.width} align='stretch' padding={[60]}>
+      <View key={resto.mainid} width={this.width} align='stretch' padding={[60]} style={{overflow: 'hidden'}}>
         <ScrollView removeClippedSubviews={false} showsVerticalScrollIndicator={false}>
             <View align='stretch' background='white'>
               <View flex={0} height={230} align='stretch'>
@@ -200,12 +200,12 @@ export default class RestaurantSingle extends Component {
                 </View>
               </View>
               <View padding={[20,20,20,20]}>
-                {resto.contact && <View>
-                  <TextWithIcon icon='phone' text={resto.contact[0].telephone} />
-                  <TextWithIcon icon='globe' text={resto.contact[0].webpage} />
-                  <TextWithIcon icon='facebook' text={resto.contact[0].facebook} />
-                  <TextWithIcon icon='twitter' text={resto.contact[0].twitter} />
-                </View>}
+                 <View padding={[0,20]} justify='space-between'>
+                  <TextWithIcon icon='phone' text={resto.telephone} />
+                  <TextWithIcon icon='globe' text={resto.webpage} />
+                  <TextWithIcon icon='facebook' text={resto.facebook} />
+                  <TextWithIcon icon='twitter' text={resto.twitter} />
+                </View>
               </View>
               {this.state.map && resto.location &&
               <View align='stretch' flex={0} height={200}>

@@ -1,5 +1,5 @@
 import {fetchRestaurants} from './api'
-import {ToastAndroid} from 'react-native'
+import {ToastAndroid, PermissionsAndroid} from 'react-native'
 
 import { DeviceEventEmitter, InteractionManager } from 'react-native'
 import ReactNativeHeading from 'react-native-heading'
@@ -11,6 +11,9 @@ const geoPromise = new Promise( (resolve, reject) => {
 export function bootstrap() {
   return async dispatch => {
     try {
+      // Check geo permissions
+      // const geoPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+      // console.warn(geoPermission)
       const geo = await geoPromise
       await dispatch({type: 'USER_GEO', payload: geo.coords})
       navigator.geolocation.watchPosition( (succ, err) => {

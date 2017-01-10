@@ -21,9 +21,9 @@ const ConnectedNavigator = connect(store => ({
 }))(Navigator)
 
 console.logException = function(ex) {
-  // raven.captureException(ex, {
-  //   extra: store.getState()
-  // });
+  raven.captureException(ex, {
+    extra: store.getState()
+  });
   /*eslint no-console:0*/
   window.console && console.error && console.error(ex);
 }

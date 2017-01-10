@@ -39,13 +39,16 @@ const initialState = {
       ticketRestaurant: true,
       sodexo: true,
     }
-  }
+  },
+  fetching: false
 }
 
 export default function reducer(state=initialState, action) {
   switch (action.type) {
+    case 'FETCHING_RESTAURANTS':
+      return {...state, fetching: true}
     case 'LOAD_RESTAURANTS':
-      return {...state, list: action.payload}
+      return {...state, list: action.payload, fetching: false}
     case 'TOGGLE_FILTER':
       return {...state, filters: {
         ...state.filters,

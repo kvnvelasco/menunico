@@ -25,7 +25,8 @@ export async function fetchRestaurants(search={}) {
     if(response.data.size !== response.data.items.length)
       throw {status: 500}
     const validatedResponse = response.data.items.filter(restaurantValidator)
-    return validatedResponse
+    const responseWithMainImages = validatedResponse.map(restaurantPrimaryImageFinder)
+    return responseWithMainImages
   } catch (e) {
     console.logException(e)
     switch (e.status) {
@@ -55,6 +56,15 @@ function restaurantValidator(item) {
   }
 }
 
+function restaurantPrimaryImageFinder(item) {
+  if(!item.image.length) return item
+  const images = item.image.sort((a,b) => a.type - b.type)
+  if(images[0].type === 1) {
+    return {...item, mainImage: images[0], image: images}
+  } else {
+    return {...item, image: images}
+  }
+}
 
 // Search Parameters
 // {
