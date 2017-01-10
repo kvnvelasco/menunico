@@ -38,11 +38,14 @@ export default class RestaurantSingle extends Component {
     this.width = width
     this.height = height
   }
+
   componentDidMount() {
+    this.props.offsetList()
     InteractionManager.runAfterInteractions(() => {
       this.setState({map: true, images: true})
     });
   }
+
   componentWillUpdate(nextProps, nextState) {
     if(!this.banner) return true
     this.banner.scrollTo({x: this.width*nextState.imageIndex}, true)

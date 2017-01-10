@@ -67,6 +67,11 @@ export default function reducer(state=initialState, action) {
         ...state.filters,
         price: action.payload
       }}
+    case 'SELECT_NEIGHBORHOOD':
+      return {...state, filters: {
+        ...state.filters,
+        neighborhood: action.payload
+      }}
     case 'SET_CURRENT_RESTAURANT':
       return {...state, selected: action.payload}
     case 'RESTAURANT_HIGHLIGHTED':

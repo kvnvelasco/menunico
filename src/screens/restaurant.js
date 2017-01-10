@@ -8,33 +8,35 @@ export default class Restaurant extends Component {
   constructor(props) {
     super(props)
     const ds = new ListView.DataSource({rowHasChanged: this._rowDiffHandler});
+    this.dimensions = Dimensions.get('window')
     this.state = {
       ds,
       data: ds.cloneWithRows(props.restaurants)
     }
   }
 
-  componentDidMount() {
-    const {width} = Dimensions.get('window')
-    const index = this.props.route.index
-    setTimeout(x => {
-      this.restaurant.scrollTo({x: width*index}, false)
-    }, 0)
-  }
   _rowDiffHandler(r1, r2) {
     return r1mainid !== r2.mainid
   }
 
+  offsetList(offset) {
+    setTimeout( x => this.restaurant.scrollTo({x: offset}, false), 0)
+  }
 
-  _renderRestaurant(restaurant) {
+  _renderRestaurant(restaurant, secIndex, rowIndex) {
+    const index = this.props.route.index
+    const offset = index * this.dimensions.width
     return (
-      <RestaurantSingle dispatch={this.props.dispatch} navigator={this.props.navigator} restaurant={restaurant}
+      <RestaurantSingle dispatch={this.props.dispatch} navigator={this.props.navigator}
+        offsetList={index == rowIndex ? this.offsetList.bind(this, offset) : x => false }
+        restaurant={restaurant}
         static={this.props.static}/>
     )
   }
 
   render() {
     const {width} = Dimensions.get('window')
+    const index = this.props.route.index
     return(
         <ListView horizontal={true}
           ref={restaurant => this.restaurant = restaurant}

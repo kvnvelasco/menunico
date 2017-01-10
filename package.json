@@ -9,7 +9,7 @@
     "ios": "react-native run-ios",
     "log-android": "react-native log-android",
     "log-ios": "react-native log-ios",
-    "release-android": "cd android; ./gradlew assembleRelease; cd ..",
+    "release-android": "cd android && ./gradlew assembleRelease",
     "release-ios": "react-native run-ios --configuration Release"
   },
   "dependencies": {
@@ -25,6 +25,7 @@
     "react-native-heading": "^1.0.0",
     "react-native-localization": "^0.1.22",
     "react-native-maps": "^0.12.1",
+    "react-native-svg": "4.4.0",
     "react-native-vector-icons": "^3.0.0",
     "react-redux": "^4.4.6",
     "redux": "^3.6.0",

@@ -75,3 +75,14 @@ export function highLightResto(resto, index) {
     }
   }
 }
+
+export function selectNeighborhood(name) {
+  return async dispatch => {
+    try {
+      dispatch({type: 'SELECT_NEIGHBORHOOD', payload: name})
+      
+    } catch (e) {
+      console.logException(e)
+    }
+  }
+}
