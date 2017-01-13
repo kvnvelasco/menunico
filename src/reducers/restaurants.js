@@ -1,24 +1,7 @@
 const initialState = {
   list: [],
   filters: {
-    price: [0, 10],
-    cuisine: {
-      italian: true,
-      french: true,
-      chinese: true,
-      mexican: true,
-      japanese: true,
-      spanish: true
-    },
-    payment: {
-      cash: true,
-      visa: true,
-      masterCard: true,
-      maestro: true,
-      amex: true,
-      ticketRestaurant: true,
-      sodexo: true,
-    }
+    price: [0, 10]
   },
   defaultFilters: {
     price: [0, 10],
@@ -51,6 +34,8 @@ export default function reducer(state=initialState, action) {
       return {...state, fetching: false}
     case 'LOAD_RESTAURANTS':
       return {...state, list: action.payload, fetching: false}
+    case 'LOAD_FILTERS':
+      return {...state, defaultFilters: action.payload, filters: {...state.filters, ...action.payload}}
     case 'TOGGLE_FILTER':
       return {...state, filters: {
         ...state.filters,
@@ -82,7 +67,7 @@ export default function reducer(state=initialState, action) {
       return {...state, highlighted: null}
     case 'SELECT_DISH':
       const restaurant = state.list.find((item) => {
-        item.mainid === action.payload.restaurant
+        return item.mainid === action.payload.restaurant
       })
       return {...state, selectedDish: {
         restaurant,

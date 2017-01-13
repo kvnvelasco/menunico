@@ -42,23 +42,25 @@ class Home extends Component {
   }
   render() {
     return (
-      <View padding={[20,20,20,20]} align='stretch' background='white'>
+      <View padding={[20,20,20,20]} align='stretch' justify='space-between' background='white'>
         <Text align='center' size={20} color='#F44E3F'>Settings</Text>
-        <TouchableOpacity onPress={this._navigateTo.bind(this, 'communication')}>
-          <View direction='row' align='stretch' justify='space-between' flex={0} margin={[20,0,20]}>
-            <Text size={17}>Communication</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this._navigateTo.bind(this, 'about')}>
-          <View direction='row' align='stretch' justify='space-between'  flex={0} margin={[60,0,20]}>
-            <Text size={17}>About</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={e => this.props.navigator.pop()}>
-          <View direction='row' align='stretch' justify='space-between'  flex={0} margin={[60,0,20]}>
-            <Text size={17}>Log Out</Text>
-          </View>
-        </TouchableOpacity>
+        <View align='stretch' justify='space-between' padding={[100,0,100]}>
+          <TouchableOpacity onPress={this._navigateTo.bind(this, 'communication')}>
+            <View direction='row' align='stretch' justify='space-between' flex={0}>
+              <Text size={17}>Communication</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._navigateTo.bind(this, 'about')}>
+            <View direction='row' align='stretch' justify='space-between'  flex={0}>
+              <Text size={17}>About</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={e => this.props.navigator.pop()}>
+            <View direction='row' align='stretch' justify='space-between'  flex={0}>
+              <Text size={17}>Log Out</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
     )
   }
@@ -68,7 +70,7 @@ class Communication extends Component {
 
   render() {
     return (
-      <View background='white' align='stretch' padding={[20,30,20,30]}>
+      <View background='white' align='stretch' padding={[0,30,20,30]}>
         <View direction='row' flex={0} margin={[]}>
           <View flex={0} margin={[4, 10]}>
             <Icon name='place' size={16}/>
@@ -110,7 +112,7 @@ class About extends Component {
   }
   render() {
     return (
-      <View padding={[20,20,20,20]} align='stretch' background='white'>
+      <View padding={[0,20,20,20]} align='stretch' background='white'>
         <Text align='center' size={20} color='#F44E3F'>About</Text>
         <TouchableOpacity onPress={this._navigateTo.bind(this, 'terms')}>
           <View direction='row' align='stretch' justify='space-between' flex={0} margin={[20,0,20]}>

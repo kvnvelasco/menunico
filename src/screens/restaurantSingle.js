@@ -4,6 +4,7 @@ import { Text } from 'menunico/src/components/type'
 import { View } from 'menunico/src/components/layout'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { TextWithIcon } from 'menunico/src/composites/type'
+import { SlideShow } from 'menunico/src/composites/media'
 import MapView from 'react-native-maps'
 import moment from 'moment'
 import { StyleSheet, Dimensions, TouchableOpacity, ScrollView, InteractionManager } from 'react-native'
@@ -22,7 +23,6 @@ export default class RestaurantSingle extends Component {
       map: false,
       images: false,
       dishIndex: 0,
-      imageIndex: 0
     }
     let today = moment().subtract(1, 'd')
     const format = {
@@ -50,37 +50,31 @@ export default class RestaurantSingle extends Component {
     if(!this.banner) return true
     this.banner.scrollTo({x: this.width*nextState.imageIndex}, true)
   }
-  _renderBanner(image, index) {
-    const imageURL = 'https://s3.eu-central-1.amazonaws.com/menunico'
-    return <View width={this.width} key={index}>
-      <Image resizeMode='cover' full
-      source={{uri: `${imageURL}/${image.url}/normal/${image.name}`}} />
-    </View>
-  }
 
-  _renderDish(title, text, index) {
+  _renderDish(title, items, index) {
     return (
-      <TouchableOpacity onPress={this._openDish.bind(this, index)}>
-        <View flex={0} align='center'>
+        <View key={index} flex={0} align='center'>
           <View flex={0} padding={[0,20,0,20]} margin={[20,0,10]}>
             <Text style={{marginBottom: 20}} color='#F2504B'>{title}</Text>
             <Image source={this.props.static.swoosh} full />
           </View>
           <View flex={0} width={250} align='center'>
-            <Text align='center'>
-              {text}
-            </Text>
+            {items.map((item, index) => {
+              return (
+                <Text onPress={ e => this._openDish(item)} padding={[0,0,10]} key={index} align='center'>
+                  {item.name}
+                </Text>
+              )
+            })}
           </View>
         </View>
-      </TouchableOpacity>
     )
   }
-  _renderDishes(item, index) {
+
+  _renderDishes(menu,item, index) {
     return (
       <View key={index} align='center' width={this.width} margin={[0,0,20]}>
-        {this._renderDish('First Dish', 'Duck dragee with sauteed kiwi and Japanese miso sauce.', 0)}
-        {this._renderDish('Main Dish', 'Beef fillet with foie, crystallized mushrooms.', 1)}
-        {this._renderDish('Dessert', 'Tiramisu with salted caramel', 2)}
+        {Object.keys(menu).map( (item, index) => this._renderDish(item, menu[item], index))}
       </View>
     )
   }
@@ -93,7 +87,6 @@ export default class RestaurantSingle extends Component {
           <Text size={16} bold
             color={this.state.dishIndex === index ? '#5C5E5D' : '#ccc'}>{date}</Text>
         </View>
-
       </TouchableOpacity>
     )
   }
@@ -111,35 +104,7 @@ export default class RestaurantSingle extends Component {
     this.setState({dishIndex: indexOffset})
   }
 
-  _renderImageControls(length) {
-    const canBack = this.state.imageIndex > 0
-    const canForward = this.state.imageIndex < length - 1
-    return (
-      <View direction='row' align='stretch' justify='space-between'
-        style={{
-        position: 'absolute',
-        opacity: 0.3,
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0}} >
-          <TouchableOpacity onPress={ e =>
-            this.setState({imageIndex: this.state.imageIndex - 1})}>
-            <View width={canBack ? 50 : 0} align='center' justify='center' background='black'>
-              <Icon name='chevron-left' size={32} color='white'/>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={ e =>
-            this.setState({imageIndex: this.state.imageIndex + 1})}>
-          <View width={canForward ? 50 : 0} align='center' justify='center' background='black'>
-            <Icon name='chevron-right' size={32} color='white'/>
-          </View>
-          </TouchableOpacity>
-      </View>
-    )
-  }
-
-  _openDish(index, day) {
+  _openDish(dish, day) {
     const route = {
       key: 'dish',
       animation: 'FloatFromBottom',
@@ -148,7 +113,11 @@ export default class RestaurantSingle extends Component {
         background: 'rgba(0,0,0,0.0)'
       }
     }
-    this.props.dispatch({type: 'SELECT_DISH', payload: {restaurant: this.props.restaurant.mainid, dish: index, day: day}})
+    const restaurant = this.props.restaurant
+    this.props.dispatch({
+      type: 'SELECT_DISH',
+      payload: {restaurant: restaurant.mainid, dish
+    }})
     this.props.dispatch(this.props.navigator.push('menunico', route))
   }
 
@@ -159,24 +128,14 @@ export default class RestaurantSingle extends Component {
       <View key={resto.mainid} width={this.width} align='stretch' padding={[60]} style={{overflow: 'hidden'}}>
         <ScrollView removeClippedSubviews={false} showsVerticalScrollIndicator={false}>
             <View align='stretch' background='white'>
-              <View flex={0} height={230} align='stretch'>
-                {resto.image.length ?
-                  <ScrollView
-                    ref={banner => this.banner = banner}
-                    horizontal={true}
-                    pagingEnabled={true}>
-                    {resto.image.map(this._renderBanner.bind(this))}
-                  </ScrollView>
+              { resto.image
+                ? <SlideShow images={resto.image}/>
                 : null }
-                {resto.image.length > 1 ? this._renderImageControls.call(this, resto.image.length) : null}
-              </View>
               <View flex={0} align='center' direction='row' justify='space-between' padding={[20,20,20,20]}>
                 <Text size={24} bold color='#F2504B'>{resto.name}</Text>
-                {/* TODO: add real price */}
-                <Text size={14} bold> 10 € </Text>
+                <Text size={14} bold> {`${resto.rawMenu.fullmenu} €`} </Text>
               </View>
               <View align='stretch'>
-                {/* TODO: add real dishes */}
                 <ScrollView scrollEnabled={false} horizontal={true}
                   contentContainerStyle={{marginLeft: (this.width/2)-75,
                     width: this.width*3}}
@@ -193,7 +152,7 @@ export default class RestaurantSingle extends Component {
                   onScroll={this._handleDishScroll.bind(this)}
                   pagingEnabled={true}
                   style={{backgroundColor: '#FCFCFC',marginTop: 7}}>
-                  {this.dishDates.map(this._renderDishes.bind(this))}
+                  {this.dishDates.map(this._renderDishes.bind(this, this.props.restaurant.menu))}
                 </ScrollView>
               </View>
               <View direction='row' justify='flex-end' padding={[20,20,0,20]}>

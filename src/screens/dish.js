@@ -4,29 +4,41 @@ import { Text } from 'menunico/src/components/type'
 import { View } from 'menunico/src/components/layout'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { TextWithIcon } from 'menunico/src/composites/type'
-import { ScrollView } from 'react-native'
+import { SlideShow } from 'menunico/src/composites/media'
+import { ScrollView, Dimensions } from 'react-native'
 export default class Dish extends Component {
-
+  constructor() {
+    super()
+    const {height, width} = Dimensions.get('window')
+    this.width = width
+  }
   render() {
+    const data = this.props.data
+    const resto = data.restaurant
+    const dish = data.dish
     return (
       <View background='white' align='stretch' padding={[60]}>
         <ScrollView removeClippedSubviews={false} showsVerticalScrollIndicator={false}>
-          <View align='stretch' background='white'>
-            <View flex={0} height={230} align='stretch'>
-              <Image resizeMode='cover' full
-              source={this.props.static.sampleDish} />
-            </View>
+          <View align='stretch' height={230} >
+            {dish.images.length
+              ? <SlideShow images={dish.images}/>
+              : <Image full resizeMode='cover' source={this.props.static.noPhoto}/>
+            }
           </View>
           <View flex={0} padding={[20,20,20,20]}>
-            <Text size={28} bold color='#F2504B'>Beef fillet with Foie & crystallized mushrooms</Text>
+            <Text size={28} bold color='#F2504B'>{dish.name}</Text>
+            <Text size={16} bold >{resto.name}</Text>
           </View>
           <View padding={[0,20,20,20]}>
             <Text size={16} lines={12}>
-              This beef fillet has a real touch of luxury about it. The addition of foie gras, parsley puree and crystallized mushrooms beautifully compliments the succulent beef, which is cooked until nicely caramelised. This is a wonderful recipie to pull out for romantic occasions
+              {dish.descriptions.en.description}
             </Text>
           </View>
           <View padding={[0,20,20,20]}>
-            <TextWithIcon icon='globe' text='www.antigua.com'/>
+            <TextWithIcon size={14} icon='phone' text={resto.telephone} />
+            <TextWithIcon size={14} icon='globe' text={resto.webpage} />
+            <TextWithIcon size={14} icon='facebook' text={resto.facebook} />
+            <TextWithIcon size={14} icon='twitter' text={resto.twitter} />
           </View>
           <View padding={[0, 40, 40, 40]}>
             <Text align='center' color='#F2504B' bold>" Check out other dishes by this restaurant "</Text>

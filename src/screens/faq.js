@@ -8,7 +8,7 @@ export default class FAQ extends Component {
 
   render() {
     return (
-      <View background='white' align='stretch' padding={[20,20,0,20]} margin={[60]}>
+      <View background='white' align='stretch' padding={[0,20,0,20]} margin={[60]}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View align='stretch' margin={[0,0,15]} flex={0}>
             <Text size={20} color='#F2504B' align='center'>Frequently Asked Questions</Text>

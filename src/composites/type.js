@@ -6,6 +6,7 @@ import { Image } from 'menunico/src/components/media'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 export function TextWithIcon(props, state) {
+  if(!props.text) return <View flex={0} />
   return (
     <View direction='row' align='center' flex={0}>
       <View flex={0} margin={[0,20]} width={(props.size || 16) + 2}>

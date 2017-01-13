@@ -21,5 +21,5 @@ export function Text(props, state) {
     paddingLeft: (props.padding && props.padding[3]) || 0,
     ...props.style
   }
-  return <NativeText numberOfLines={props.lines || 3} style={style}>{props.content || props.children}</NativeText>
+  return <NativeText onPress={props.onPress} numberOfLines={props.lines || 3} style={style}>{props.content || props.children}</NativeText>
 }

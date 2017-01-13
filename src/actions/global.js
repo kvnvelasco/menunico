@@ -1,4 +1,4 @@
-import {fetchRestaurants} from './api'
+import {fetchRestaurants, getFilters, getMenusByRestaurantIds, getDishById} from './api'
 import {ToastAndroid, PermissionsAndroid} from 'react-native'
 
 import { DeviceEventEmitter, InteractionManager } from 'react-native'
@@ -9,9 +9,6 @@ import ReactNativeHeading from 'react-native-heading'
 export function bootstrap() {
   return async dispatch => {
     try {
-      // Check geo permissions
-      // const geoPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-      // console.warn(geoPermission)
       const geo = await getLocationInformation(dispatch)
       await dispatch({type:'LOADING_RESTAURANTS'})
       let request = {}
@@ -25,8 +22,10 @@ export function bootstrap() {
           }
         }
       }
-      const response = await fetchRestaurants(request)
-      await dispatch({type:'LOAD_RESTAURANTS', payload: response})
+      const filters = await getFilters()
+      const restaurants = await fetchRestaurants(request)
+      await dispatch({type:'LOAD_RESTAURANTS', payload: restaurants})
+      await dispatch({type: 'LOAD_FILTERS', payload: filters})
       const navigate = {
         id: 'main',
         route: { key: 'menunico'}
@@ -78,6 +77,7 @@ export function openFilters() {
     dispatch({type: 'NAVIGATE_PUSH', payload: navigate})
   }
 }
+
 export function stopLogHeading() {
   ReactNativeHeading.stop();
   DeviceEventEmitter.removeAllListeners('headingUpdated');

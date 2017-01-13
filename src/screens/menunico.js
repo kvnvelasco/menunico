@@ -36,11 +36,15 @@ class Menunico extends Component {
   }
 
   render() {
-    const navigator = this.props.navigator || {}
+    const allNavigators = this.props.allNavigators
+    const navStack = allNavigators.navigatorStack
+    const navigator = allNavigators[navStack[navStack.length - 1]] || {}
     const currentRoute = navigator.currentRoute || {}
     const navbarStyle = currentRoute.navbar || {}
-    const navbarState = navigator.depth
     const showSearch = currentRoute.showSearch
+
+    const thisNavigator = this.props.navigator || {}
+    const navbarState = thisNavigator.depth
     return (
       <View align='stretch'>
         <Navigator
@@ -54,7 +58,7 @@ class Menunico extends Component {
           <Restaurant key='restaurant'
             restaurants={this.props.restaurants.list}
             static={this.props.static}/>
-          <Dish key='dish' restaurants={this.props.restaurants.dishes} static={this.props.static}/>
+          <Dish key='dish' static={this.props.static} data={this.props.restaurants.selectedDish} static={this.props.static}/>
           <Filters key='filters'/>
           <Map restaurants={this.props.restaurants.list}
             location={this.props.user.geo}
@@ -99,6 +103,11 @@ class Menunico extends Component {
                   <Icon name='search' size={24} />
                 </TouchableOpacity>
             }
+            {
+              currentRoute.extra
+              ? currentRoute.extra
+              : null
+            }
         </View>
         <Menu icons={this.props.static.menu}
           dispatch={this.props.dispatch}
@@ -110,6 +119,7 @@ class Menunico extends Component {
 
 export default connect( store => ({
   navigator: store.navigation.menunico,
+  allNavigators: store.navigation,
   restaurants: store.restaurants,
   selected: store.restaurants.selected,
   static: store.static,

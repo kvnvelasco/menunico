@@ -33,7 +33,7 @@ const style = {
 export function CheckImage(props) {
   const style = {
     base: {
-      height: (props.height || 30 ) + 4,
+      height: (props.height || 30 ) + 2,
       width: (props.width || 50) + 4,
       borderColor: 'white',
       borderWidth: 2,
@@ -51,7 +51,7 @@ export function CheckImage(props) {
         <Image resizeMode={props.resize || 'center'}
           style={StyleSheet.absoluteFillObject}
           width={props.width || 50}
-          height={props.height || 30}
+          height={props.height || 28}
           source={props.image} />
       </View>
     </TouchableWithoutFeedback>

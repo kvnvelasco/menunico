@@ -20,16 +20,68 @@ api.interceptors.response.use(response => {
     return Promise.reject(response)
   if(response.data.result && response.data.result !== 'success')
     return Promise.reject(response)
-  return response
+  return response.data
 })
 
 
 export async function fetchRestaurants(search={}) {
   try {
-    const response = await api.post('search/restaurant', search)
-    const validatedResponse = response.data.items.filter(restaurantValidator)
+    const {items} = await api.post('search/restaurant', search)
+    if(!items) return []
+    const validatedResponse = items.filter(restaurantValidator)
+    const menuPromises = validatedResponse.map( item => {
+      return getMenuByRestaurantId(item.mainid)
+    })
+    const returnedMenus = await Promise.all(menuPromises)
+    const menus = returnedMenus.reduce((acc, item) => {
+      return [...acc, ...(item.items || [])]
+    }, [])
+
+    const menusByRestaurantId = menus.reduce( (acc, item) => {
+      return {...acc, [item.restaurantid]: item}
+    }, {})
     const responseWithMainImages = validatedResponse.map(restaurantPrimaryImageFinder)
-    return responseWithMainImages
+
+    const restaurantsWithMenus = responseWithMainImages.map( restaurant => {
+      if(!menusByRestaurantId[restaurant.mainid]) return null
+      const rawMenu = menusByRestaurantId[restaurant.mainid]
+      const menu = rawMenu.categories.sort( (a, b) => a.categoryid - b.categoryid).reduce( (acc, item) => {
+        return {...acc, [item.name]: item.foods.map(item => item.mainid)}
+      }, {})
+      const dishes = Object.keys(menu).reduce((acc, item) => {
+        return [...acc, ...menu[item]]
+      },[])
+      return {...restaurant, menu, dishes, rawMenu}
+    })
+
+    const dishIds = restaurantsWithMenus.reduce( (acc, item) => {
+      if(!item) return acc
+      return [...acc, ...item.dishes]
+    }, [])
+    const dishes = await getDishesByIds(dishIds)
+    const dishesByDishId = dishes.reduce( (acc, item) => {
+      return {...acc, [item.foodid]: item}
+    }, {})
+
+    const completeRestaurants = restaurantsWithMenus.map( item => {
+      if(!item) return null
+      let menu = {}
+      for (var key in item.menu) {
+        menu[key] = item.menu[key].map( item => {
+          const dish = dishesByDishId[item]
+          return {
+            name: dish.name,
+            descriptions: dish.foodlang.reduce( (acc, item) => {
+              return {...acc, [item.lang]: item}
+            }, {}),
+            images: dish.images
+          }
+        })
+      }
+      return {...item, menu}
+    })
+    const restaurants = completeRestaurants.filter( item => item)
+    return restaurants
   } catch (e) {
     console.logException('Api error',e)
     throw new ApiError(e)
@@ -37,13 +89,21 @@ export async function fetchRestaurants(search={}) {
 }
 
 export async function getFilters() {
-  return await api.get('search/restaurant/parameters')
+  const filters =  await api.get('search/restaurant/parameters')
+  // transform filters to <key> : true
+  const transformed = Object.keys(filters).reduce( (acc, item) => {
+    const trueFilters = filters[item].reduce( (acc,filterItem) => {
+      return {...acc, [filterItem]: false}
+    }, {})
+    return {...acc, [item]: trueFilters}
+  }, {})
+  return transformed
 }
 
 export async function getMenuByRestaurantId(id, fromDate, toDate) {
   try {
     const dateFormat = /[0-9]{2}\/[0-1][0-9]\/[0-9]{4}/
-    if(fromDate.match(dateFormat) && toDate.match(dateFormat)) {
+    if(fromDate && fromDate.match(dateFormat) && toDate&& toDate.match(dateFormat)) {
       const data = {
         rsetaurantid: id,
         date: {
@@ -53,16 +113,30 @@ export async function getMenuByRestaurantId(id, fromDate, toDate) {
       }
       return await api.post('search/menu', data)
     }
-    return await api.post('search/menu', {restaurantid: id})
+    return await api.post('search/menu', {restaurantid: id.toString()})
   } catch (e) {
     console.logException('Api error',e)
     throw new ApiError(e)
   }
 }
 
+export async function getMenusByRestaurantIds(ids) {
+  const menus = await api.post('search/menu/multiple', {ids: ids})
+  return menus || []
+}
+
 export async function getDishById(id) {
   try {
     return await api.post('search/food', {id})
+  } catch (e) {
+    console.logException('Api error',e)
+    throw new ApiError(e)
+  }
+}
+
+export async function getDishesByIds(ids) {
+  try {
+    return await api.post('search/food/multiple', {ids: ids})
   } catch (e) {
     console.logException('Api error',e)
     throw new ApiError(e)

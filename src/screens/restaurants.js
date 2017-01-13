@@ -24,19 +24,20 @@ export default class Restaurants extends Component {
      };
   }
   componentWillReceiveProps(newProps,) {
-    if(newProps.restaurants === this.props.restaurants)
+    if(newProps.restaurants !== this.props.restaurants)
       this.setState({
         data: this.state.ds.cloneWithRows(newProps.restaurants)
-      })
+    })
   }
   _rowDiffHandler(r1, r2) {
-    return r1.descriptions.mainid !== r2.descriptions.mainid
+    return r1.mainid !== r2.mainid
   }
   _navigateToRestaurant(index, name) {
     this.props.dispatch(openRestaurant(index, name))
   }
   _renderRestaurant(row, section, index) {
-    const {name, address, image} = row
+    const {name, street, image, menu} = row
+    const {fullmenu} = row.rawMenu
     const imageURL = 'https://s3.eu-central-1.amazonaws.com/menunico'
     let cover = row.mainImage
     return (
@@ -48,22 +49,26 @@ export default class Restaurants extends Component {
             </View>
             <View margin={[0,0,0,10]}>
               <Text size={16} color='#F2504B'>{name}</Text>
-              <Text size={14} color='#ccc'>{`${address && address[0].street}`}</Text>
+              <Text size={12} color='#ccc'>{`${street}`}</Text>
               <View>
-                <Text size={12}>
-                  1 Dish: Mushrooms croquettes. Truffled Eggs with ham...
-                </Text>
-                <Text size={12}>
-                  2 Dish: Iberian Pork Slice, Veal Tenderloin, Hamuburger...
-                </Text>
+                {Object.keys(menu).map((item,index) => this._renderDish(item, menu[item][0].name, index))}
               </View>
             </View>
           </View>
           <View direction='row' flex={0} justify='flex-end'>
-            <Text>10€</Text>
+            <Text>{`${fullmenu}€`}</Text>
           </View>
         </TouchableOpacity>
       </View>
+    )
+  }
+
+  _renderDish(name, dish, key) {
+    return (
+      <Text color='#666' key={key} size={14} lines={2}>
+        <Text color='#666' size={14}>{`${key + 1}. `}</Text>
+        {dish}
+      </Text>
     )
   }
   _renderSeparator(section, row) {
@@ -104,7 +109,7 @@ export default class Restaurants extends Component {
             <Text size={14} white>{`Barcelona, ${this.state.date.format('dddd Do MMMM')}`}</Text>
           </View>
         </View>
-        {this.props.restaurants.length &&
+        {this.props.restaurants.length ?
           <ListView
             contentContainerStyle={{
               overflow: 'hidden',
@@ -124,6 +129,7 @@ export default class Restaurants extends Component {
                 onRefresh={this._onRefresh.bind(this)}
               />
             }/>
+          : <Text margin={[150, 30, 0, 30]} color='#666' align='center'>{ this.props.fetching ? "Loading Restaurants..." : "We couldn't find any restaurants with your selected filters"}</Text>
         }
         <View direction='row'
           justify='center'
