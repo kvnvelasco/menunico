@@ -47,6 +47,8 @@ export default function reducer(state=initialState, action) {
   switch (action.type) {
     case 'FETCHING_RESTAURANTS':
       return {...state, fetching: true}
+    case 'FETCH_RESTAURANTS_FAIL':
+      return {...state, fetching: false}
     case 'LOAD_RESTAURANTS':
       return {...state, list: action.payload, fetching: false}
     case 'TOGGLE_FILTER':

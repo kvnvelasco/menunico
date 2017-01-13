@@ -62,6 +62,7 @@ class Home extends Component {
 
   _filter() {
     this.props.dispatch(filterRestaurants(this.props.filters))
+    this.props.navigator.pop()
   }
   render() {
     return <View align='stretch' justify='space-between'

@@ -1,4 +1,6 @@
 import axios from 'axios'
+import moment from 'moment'
+import {error, ApiError} from './errors'
 
 let api = axios.create({
   baseURL: 'http://www.menunico.es:8080/',
@@ -9,38 +11,61 @@ let api = axios.create({
 })
 
 api.interceptors.response.use(response => {
+  // check header type
+  if(response.headers['content-type'] !== 'application/json;charset=utf-8')
+    return Promise.reject(response)
   if(!response)
-    return Promise.reject({...response, status: 204})
+    return Promise.reject(response)
   if(response.data.result === 'fail')
-    return Promise.reject({...response, status: 500})
+    return Promise.reject(response)
   if(response.data.result && response.data.result !== 'success')
-    return Promise.reject({...response, status: 503})
+    return Promise.reject(response)
   return response
 })
 
 
 export async function fetchRestaurants(search={}) {
   try {
-    const response = await api.post('search', search)
-    if(response.data.size !== response.data.items.length)
-      throw {status: 500}
+    const response = await api.post('search/restaurant', search)
     const validatedResponse = response.data.items.filter(restaurantValidator)
     const responseWithMainImages = validatedResponse.map(restaurantPrimaryImageFinder)
     return responseWithMainImages
   } catch (e) {
-    console.logException(e)
-    switch (e.status) {
-      case undefined:
-        throw {type: 204, message: 'No Response from Server', error: e}
-        break
-      case 500:
-        throw {type: 500, message: 'Server could not process request', error: e}
-        break
-      case 503:
-        throw {type: 503, message: 'Bad Response from Server'}
-      default:
-        throw new Error('Unknown error occured during fetch restaurants')
+    console.logException('Api error',e)
+    throw new ApiError(e)
+  }
+}
+
+export async function getFilters() {
+  return await api.get('search/restaurant/parameters')
+}
+
+export async function getMenuByRestaurantId(id, fromDate, toDate) {
+  try {
+    const dateFormat = /[0-9]{2}\/[0-1][0-9]\/[0-9]{4}/
+    if(fromDate.match(dateFormat) && toDate.match(dateFormat)) {
+      const data = {
+        rsetaurantid: id,
+        date: {
+          from: fromDate,
+          to: toDate
+        }
+      }
+      return await api.post('search/menu', data)
     }
+    return await api.post('search/menu', {restaurantid: id})
+  } catch (e) {
+    console.logException('Api error',e)
+    throw new ApiError(e)
+  }
+}
+
+export async function getDishById(id) {
+  try {
+    return await api.post('search/food', {id})
+  } catch (e) {
+    console.logException('Api error',e)
+    throw new ApiError(e)
   }
 }
 
@@ -65,6 +90,8 @@ function restaurantPrimaryImageFinder(item) {
     return {...item, image: images}
   }
 }
+
+
 
 // Search Parameters
 // {

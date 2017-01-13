@@ -32,7 +32,8 @@ export function filterRestaurants(filter, searchText){
       const response = await fetchRestaurants(post)
       dispatch({type:'LOAD_RESTAURANTS', payload:response })
     } catch (e) {
-      console.logException(e)
+      console.logException('Filter Restaurant Error', e)
+      dispatch({type:'FETCH_RESTAURANTS_FAIL'})
     }
   }
 }
@@ -61,7 +62,7 @@ export function openRestaurant(index, name) {
       }
       dispatch({type: 'NAVIGATE_PUSH', payload: navigation})
     } catch (e) {
-      console.logException(e)
+      console.logException('Open Restaurant Error', e)
     }
   }
 }
@@ -71,7 +72,7 @@ export function highLightResto(resto, index) {
     try {
       dispatch( {type: 'RESTAURANT_HIGHLIGHTED', payload: {id: resto.mainid, index}} )
     } catch (e) {
-      console.logException(e)
+      console.logException('Highlight Restaurant Error', e)
     }
   }
 }
@@ -80,9 +81,9 @@ export function selectNeighborhood(name) {
   return async dispatch => {
     try {
       dispatch({type: 'SELECT_NEIGHBORHOOD', payload: name})
-      
+
     } catch (e) {
-      console.logException(e)
+      console.logException('Select Neighborhood Error', e)
     }
   }
 }

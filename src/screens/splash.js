@@ -10,7 +10,6 @@ const one = once(bootstrap)
 export default class Splash extends Component {
   componentWillMount() {
     const route = { key: 'menunico' }
-
     this.props.dispatch(one())
   }
   render(){
