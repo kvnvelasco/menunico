@@ -25,7 +25,7 @@ export class Navigator extends Component {
     this._assembleRoute = this._assembleRoute.bind(this)
     this.id = props.id
     this._handleBack = this._handleBack.bind(this)
-    this.initialRoute = props.initalRoute || { key: props.children[0].key }
+    this.initialRoute = props.initialRoute || { key: props.children[0].key }
   }
 
   static propTypes = {
@@ -86,7 +86,7 @@ export class Navigator extends Component {
     }
 
     const boundPop = this.props.dispatch.bind(element, pop())
-    
+
     const component = {...element, props: {...element.props, dispatch: this.props.dispatch,
       route, navigator: {push, pop: boundPop, replace}}}
 

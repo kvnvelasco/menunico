@@ -135,6 +135,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-share')
     compile project(':react-native-svg')
     compile project(':react-native-heading')
     compile project(':react-native-maps')

@@ -1,0 +1,429 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Menunico",
+		"_postman_id": "3aa59898-44ea-8e9c-b56d-3198165e0a5c",
+		"description": "A collection of Methods for the menunico API\n",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "[Restaurant] Search",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Request is Successful\"] = responseBody.has(\"success\");",
+							"tests[\"Request Length is Correct\"] = JSON.parse(responseBody).items.length === JSON.parse(responseBody).size"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/search/restaurant",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"origins\": [\"Greek\"],\n\t\"types\": null,\n\t\"services\": null,\n\t\"paymentmenthods\": null,\n\t\"address\": {\n\t\t\"city\": null,\n\t\t\"address\": null\n\t},\n\t\"geobox\": {\n\t\t\"top_left_lat\": 0,\n\t\t\"top_left_lon\": 0,\n\t\t\"bottom_right_lat\": 0,\n\t\t\"bottom_right_lon\": 0\n\t}\n}"
+				},
+				"description": "Get a list of restaurants"
+			},
+			"response": [
+				{
+					"id": "a34cf0bc-4e90-48a8-93eb-1e07635ade7b",
+					"name": "Success Case",
+					"originalRequest": {
+						"url": "{{url}}/search/restaurant",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"origins\": [\"Greek\"],\n\t\"types\": null,\n\t\"services\": null,\n\t\"paymentmenthods\": null,\n\t\"address\": {\n\t\t\"city\": null,\n\t\t\"address\": null\n\t},\n\t\"geobox\": {\n\t\t\"top_left_lat\": 0,\n\t\t\"top_left_lon\": 0,\n\t\t\"bottom_right_lat\": 0,\n\t\t\"bottom_right_lon\": 0\n\t}\n}"
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "3254",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=utf-8",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 20 Mar 2017 02:35:10 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "Server",
+							"value": "Apache-Coyote/1.1",
+							"name": "Server",
+							"description": "A name for the server"
+						}
+					],
+					"cookie": [],
+					"responseTime": 598,
+					"body": "{\"result\":\"success\",\"size\":1,\"items\":[{\"descriptions\":[{\"mainid\":1,\"name\":\"\",\"descriptionlangname\":[\"\"],\"lang\":[\"es\"]}],\"postcode\":\"08011\",\"foursquare\":\"\",\"origin\":[{\"mainid\":23,\"name\":\"Greek\",\"originlang\":[{\"lang\":\"en\",\"name\":\"Greek\"},{\"lang\":\"es\",\"name\":\"Greek\"},{\"lang\":\"cat\",\"name\":\"Greek\"}]},{\"mainid\":30,\"name\":\"Catalan\",\"originlang\":[{\"lang\":\"en\",\"name\":\"Catalan\"},{\"lang\":\"es\",\"name\":\"Catalan\"},{\"lang\":\"cat\",\"name\":\"Catalan\"}]},{\"mainid\":29,\"name\":\"Spanish\",\"originlang\":[{\"lang\":\"en\",\"name\":\"Spanish\"},{\"lang\":\"es\",\"name\":\"Spanish\"},{\"lang\":\"cat\",\"name\":\"Spanish\"}]},{\"mainid\":17,\"name\":\"Mediterranean\",\"originlang\":[{\"lang\":\"en\",\"name\":\"Mediterranean\"},{\"lang\":\"es\",\"name\":\"Mediterranean\"},{\"lang\":\"cat\",\"name\":\"Mediterranean\"}]}],\"paymentmethods\":[{\"mainid\":7,\"name\":\"Cheque Gourment\",\"paymentmethodslang\":[{\"lang\":\"en\",\"name\":\"Cheque Gourment\"},{\"lang\":\"es\",\"name\":\"Cheque Gourment\"},{\"lang\":\"cat\",\"name\":\"Cheque Gourment\"}]},{\"mainid\":4,\"name\":\"Maestro\",\"paymentmethodslang\":[{\"lang\":\"en\",\"name\":\"Maestro\"},{\"lang\":\"es\",\"name\":\"Maestro\"},{\"lang\":\"cat\",\"name\":\"Maestro\"}]},{\"mainid\":8,\"name\":\"Sodaxo\",\"paymentmethodslang\":[{\"lang\":\"en\",\"name\":\"Sodaxo\"},{\"lang\":\"es\",\"name\":\"Sodaxo\"},{\"lang\":\"cat\",\"name\":\"Sodaxo\"}]},{\"mainid\":1,\"name\":\"Cash\",\"paymentmethodslang\":[{\"lang\":\"en\",\"name\":\"Cash\"},{\"lang\":\"es\",\"name\":\"Cash\"},{\"lang\":\"cat\",\"name\":\"Cash\"}]},{\"mainid\":6,\"name\":\"Ticket Restaurant\",\"paymentmethodslang\":[{\"lang\":\"en\",\"name\":\"Ticket Restaurant\"},{\"lang\":\"es\",\"name\":\"Ticket Restaurant\"},{\"lang\":\"cat\",\"name\":\"Ticket Restaurant\"}]}],\"country\":\"Spain\",\"city\":[{},{},{}],\"image\":[{\"mainid\":1,\"imageid\":1,\"name\":\"main.png\",\"url\":\"images/dionisos/restaurant\",\"type\":1,\"creationdate\":\"2017-02-07T11:40:25Z\",\"lastmodifieddate\":\"2017-02-07T11:40:25Z\"},{\"mainid\":1,\"imageid\":15,\"name\":\"logo_new.png\",\"url\":\"images/dionisos/restaurant\",\"type\":2,\"creationdate\":\"2017-02-07T12:14:37Z\",\"lastmodifieddate\":\"2017-02-07T12:14:37Z\"}],\"lng\":2.1601412,\"services\":[{\"mainid\":5,\"name\":\"Menu for kids\",\"serviceslang\":[{\"lang\":\"en\",\"name\":\"Menu for kids\"},{\"lang\":\"es\",\"name\":\"Menu for kids\"},{\"lang\":\"cat\",\"name\":\"Menu for kids\"}]},{\"mainid\":7,\"name\":\"Access for disabled\",\"serviceslang\":[{\"lang\":\"en\",\"name\":\"Access for disabled\"},{\"lang\":\"es\",\"name\":\"Access for disabled\"},{\"lang\":\"cat\",\"name\":\"Access for disabled\"}]},{\"mainid\":4,\"name\":\"AC\",\"serviceslang\":[{\"lang\":\"en\",\"name\":\"AC\"},{\"lang\":\"es\",\"name\":\"AC\"},{\"lang\":\"cat\",\"name\":\"AC\"}]},{\"mainid\":1,\"name\":\"Wifi\",\"serviceslang\":[{\"lang\":\"en\",\"name\":\"Wifi\"},{\"lang\":\"es\",\"name\":\"Wifi\"},{\"lang\":\"cat\",\"name\":\"Wifi\"}]}],\"opentimeafternoon\":null,\"webpage\":\"https://dionisosrestaurants.com/restaurante-griego-dionisos-aribau/\",\"email\":\"mixalis_massopoulos@hotmail.com\",\"types\":[],\"twitter\":\"\",\"closetimemorning\":null,\"opentimemorning\":null,\"name\":\"Dionisos Aribau\",\"location\":{\"lat\":41.3879177,\"lon\":2.1601412},\"subscription\":{\"mainid\":2,\"type\":\"premium\",\"status\":\"ACTIVE\",\"date\":\"2017-02-07T09:28:35Z\"},\"region\":[{\"lang\":\"en\",\"name\":\"Eixample\"},{\"lang\":\"es\",\"name\":\"Eixample\"},{\"lang\":\"cat\",\"name\":\"Eixample\"}],\"telephone\":\"933 23 55 86\",\"facebook\":\"https://www.facebook.com/Dionisos-Aribau-537912273050355/\",\"closetimeafternoon\":null,\"mainid\":1,\"lat\":41.3879177,\"mobile\":\"\",\"street\":\"Carrer Aribau 50\"}]}"
+				}
+			]
+		},
+		{
+			"name": "[Filters] Get List of Filters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Request is Successful\"] = responseBody.has(\"origins\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/search/restaurant/parameters",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "Get the available filters from the backend"
+			},
+			"response": [
+				{
+					"id": "e88f3f6f-60a7-495e-98d5-bbf7a991d2ee",
+					"name": "Success Case",
+					"originalRequest": {
+						"url": "{{url}}/search/restaurant/parameters",
+						"method": "GET",
+						"header": [],
+						"body": {}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "697",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=utf-8",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 20 Mar 2017 02:35:28 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "Server",
+							"value": "Apache-Coyote/1.1",
+							"name": "Server",
+							"description": "A name for the server"
+						}
+					],
+					"cookie": [],
+					"responseTime": 304,
+					"body": "{\"origins\":[\"African\",\"Ethiopian\",\"Mexican\",\"Latin American\",\"Brazilian\",\"Argentinian\",\"Chinese\",\"Japanese\",\"Asian\",\"Korean\",\"Vietnamese\",\"Thai\",\"Arabic\",\"Syrian\",\"Indian\",\"Turkish\",\"Mediterranean\",\"Italian\",\"French\",\"European\",\"Lebanese\",\"Pakistan\",\"Greek\",\"Russian\",\"Polish\",\"North American\",\"Cuban\",\"Portuguese\",\"Spanish\",\"Catalan\",\"Andalusian\",\"Basque\",\"Galician\",\"Canary\",\"Other\"],\"types\":[\"Vegetarian\",\"Vegan\",\"Gluten free\",\"Lactose free\",\"Bio\",\"Other\"],\"paymentmethods\":[\"Cash\",\"Visa Mastercard\",\"Diners\",\"Maestro\",\"American Express\",\"Ticket Restaurant\",\"Cheque Gourment\",\"Sodaxo\",\"Other\"],\"services\":[\"Wifi\",\"Terrace\",\"Parking\",\"AC\",\"Menu for kids\",\"Place for kids\",\"Access for disabled\"]}"
+				}
+			]
+		},
+		{
+			"name": "[Menu] Get By ID and date Range",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody)",
+							"tests[\"Successful\"] = jsonData.result === \"success\"",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/search/menu",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"restaurantid\": \"1\",\n\t\"date\": {\n\t\t\"from\": \"01/01/2017\",\n\t\t\"to\": \"30/12/2017\"\n\t}\n}"
+				},
+				"description": "Date takes format DD/MM/YYYY"
+			},
+			"response": [
+				{
+					"id": "d9956209-10ab-4905-b663-ccde660b5a93",
+					"name": "Failure Case",
+					"originalRequest": {
+						"url": "{{url}}/search/menu",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"restaurantid\": \"1\",\n\t\"date\": {\n\t\t\"from\": \"01/01/2017\",\n\t\t\"to\": \"30/12/2017\"\n\t}\n}"
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "50",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=utf-8",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 20 Mar 2017 02:35:35 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "Server",
+							"value": "Apache-Coyote/1.1",
+							"name": "Server",
+							"description": "A name for the server"
+						}
+					],
+					"cookie": [],
+					"responseTime": 301,
+					"body": "{\"result\":\"fail\",\"message\":\"An exception occured\"}"
+				}
+			]
+		},
+		{
+			"name": "[Menu] Get Multiple by ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody)",
+							"tests[\"Has Content\"] = jsonData.length !== 0",
+							"tests[\"ID is Correct\"] = jsonData[0].mainid == 1"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/search/menu/multiple",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"ids\": [1, 2, 3, 4, 5, 6]\n}"
+				},
+				"description": ""
+			},
+			"response": [
+				{
+					"id": "7b264c46-53fb-4f4c-a992-c9974155e377",
+					"name": "Success Case",
+					"originalRequest": {
+						"url": "{{url}}/search/menu/multiple",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"ids\": [1, 2, 3, 4, 5, 6]\n}"
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "574",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=utf-8",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 20 Mar 2017 02:35:44 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "Server",
+							"value": "Apache-Coyote/1.1",
+							"name": "Server",
+							"description": "A name for the server"
+						}
+					],
+					"cookie": [],
+					"responseTime": 306,
+					"body": "[{\"description\":\"Pan pita, bebida, cafe y postre\",\"menudate\":\"02/07/2017\",\"package\":11.8,\"coffee\":true,\"halfmenuseconddish\":8.5,\"lastmodifieddate\":null,\"fullmenu\":11.8,\"endtime\":\"04:00PM\",\"categories\":[{\"categoryid\":2,\"name\":\"Second Dish\",\"foods\":[{\"mainid\":3},{\"mainid\":4}]},{\"categoryid\":3,\"name\":\"Desert\",\"foods\":[{\"mainid\":5},{\"mainid\":6},{\"mainid\":8},{\"mainid\":9}]},{\"categoryid\":1,\"name\":\"First Dish\",\"foods\":[{\"mainid\":1},{\"mainid\":2}]}],\"apperitivo\":false,\"halfmenufirstdish\":8.5,\"starttime\":\"01:00PM\",\"restaurantid\":1,\"creationdate\":null,\"mainid\":1,\"terrace\":null}]"
+				}
+			]
+		},
+		{
+			"name": "[Food] Get Food by Multiple IDs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Has Content\"] = jsonData.length !== 0",
+							"tests[\"ID is Correct\"] = jsonData[0].foodid == 1"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/search/food/multiple",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"ids\": [1, 2, 3, 4, 5, 6]\n}"
+				},
+				"description": ""
+			},
+			"response": [
+				{
+					"id": "e3fe58f0-b5a5-4129-94a3-9807cfca4537",
+					"name": "Success Case",
+					"originalRequest": {
+						"url": "{{url}}/search/food/multiple",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"ids\": [1, 2, 3, 4, 5, 6]\n}"
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "4093",
+							"name": "Content-Length",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=utf-8",
+							"name": "Content-Type",
+							"description": "The mime type of this content"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 20 Mar 2017 02:35:52 GMT",
+							"name": "Date",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"key": "Server",
+							"value": "Apache-Coyote/1.1",
+							"name": "Server",
+							"description": "A name for the server"
+						}
+					],
+					"cookie": [],
+					"responseTime": 303,
+					"body": "[{\"foodid\":1,\"images\":[{\"creationdate\":\"2017-02-07T13:17:19Z\",\"lastmodifieddate\":\"2017-02-07T13:17:19Z\",\"name\":\"ensalada.png\",\"mainid\":16,\"type\":3,\"url\":\"images/dionisos/food\"},{\"creationdate\":\"2017-02-07T11:56:59Z\",\"lastmodifieddate\":\"2017-02-07T11:56:59Z\",\"name\":\"\",\"mainid\":3,\"type\":3,\"url\":\"images/dionisos/food\"}],\"name\":\"Mixed salad\",\"restaurant\":\"Dionisos Aribau\",\"categories\":[{\"name\":\"First Dish\",\"categoryid\":1}],\"allergies\":[],\"restaurantid\":1,\"foodlang\":[{\"name\":\"Mixed salad\",\"description\":\"Mixed salad with camembert cheese\",\"lang\":\"en\"},{\"name\":\"Ensalada mixta\",\"description\":\"Ensalada mixta con queso camembert\",\"lang\":\"es\"},{\"name\":\"Amanida mixta\",\"description\":\"Amanida mixta amb formatge camembert\",\"lang\":\"cat\"}],\"mainid\":1},{\"foodid\":2,\"images\":[{\"mainid\":18,\"url\":\"images/dionisos/food\",\"name\":\"tomates.png\",\"type\":3,\"creationdate\":\"2017-02-07T13:19:34Z\",\"lastmodifieddate\":\"2017-02-07T13:19:34Z\"},{\"mainid\":17,\"url\":\"images/dionisos/food\",\"name\":\"tomates.png\",\"type\":3,\"creationdate\":\"2017-02-07T13:18:21Z\",\"lastmodifieddate\":\"2017-02-07T13:18:21Z\"},{\"mainid\":4,\"url\":\"images/dionisos/food\",\"name\":\"\",\"type\":3,\"creationdate\":\"2017-02-07T11:58:15Z\",\"lastmodifieddate\":\"2017-02-07T11:58:15Z\"}],\"name\":\"Stuffed tomato\",\"restaurant\":\"Dionisos Aribau\",\"categories\":[{\"name\":\"First Dish\",\"categoryid\":1}],\"allergies\":[],\"restaurantid\":1,\"foodlang\":[{\"name\":\"Stuffed tomato\",\"description\":\"Rice stuffed tomato\",\"lang\":\"en\"},{\"name\":\"Tomate relleno\",\"description\":\"Tomate relleno de arroz\",\"lang\":\"es\"},{\"name\":\"Tomàquet farcit\",\"description\":\"Tomàquet farcit d'arròs\",\"lang\":\"cat\"}],\"mainid\":2},{\"foodid\":3,\"images\":[{\"mainid\":19,\"url\":\"images/dionisos/food\",\"name\":\"pork.png\",\"type\":3,\"creationdate\":\"2017-02-07T13:19:54Z\",\"lastmodifieddate\":\"2017-02-07T13:19:54Z\"},{\"mainid\":5,\"url\":\"images/dionisos/food\",\"name\":\"\",\"type\":3,\"creationdate\":\"2017-02-07T11:59:10Z\",\"lastmodifieddate\":\"2017-02-07T11:59:10Z\"}],\"name\":\"Stewed pork\",\"restaurant\":\"Dionisos Aribau\",\"categories\":[{\"name\":\"Second Dish\",\"categoryid\":2}],\"allergies\":[],\"restaurantid\":1,\"foodlang\":[{\"name\":\"Stewed pork\",\"description\":\"Stewed pork with leeks\",\"lang\":\"en\"},{\"name\":\"Estofado de cerdo\",\"description\":\"Estofado de cerdo con puerros\",\"lang\":\"es\"},{\"name\":\"Estofat de porc\",\"description\":\"Estofat de porc amb porros\",\"lang\":\"cat\"}],\"mainid\":3},{\"foodid\":4,\"images\":[{\"mainid\":20,\"url\":\"images/dionisos/food\",\"name\":\"dorada.png\",\"type\":3,\"creationdate\":\"2017-02-07T13:20:12Z\",\"lastmodifieddate\":\"2017-02-07T13:20:12Z\"},{\"mainid\":6,\"url\":\"images/dionisos/food\",\"name\":\"\",\"type\":3,\"creationdate\":\"2017-02-07T12:01:09Z\",\"lastmodifieddate\":\"2017-02-07T12:01:09Z\"}],\"name\":\"Sea bream\",\"restaurant\":\"Dionisos Aribau\",\"categories\":[{\"name\":\"Second Dish\",\"categoryid\":2}],\"allergies\":[],\"restaurantid\":1,\"foodlang\":[{\"name\":\"Sea bream\",\"description\":\"Sea bream in the oven with vegetables\",\"lang\":\"en\"},{\"name\":\"Dorada al horno\",\"description\":\"Dorada al horno con verduras\",\"lang\":\"es\"},{\"name\":\"Orada al forn\",\"description\":\"Orada al forn amb verdures\",\"lang\":\"cat\"}],\"mainid\":4},{\"foodid\":5,\"images\":[{\"mainid\":7,\"url\":\"images/dionisos/food\",\"name\":\"\",\"type\":3,\"creationdate\":\"2017-02-07T12:02:10Z\",\"lastmodifieddate\":\"2017-02-07T12:02:10Z\"}],\"name\":\"Baklava\",\"restaurant\":\"Dionisos Aribau\",\"categories\":[{\"name\":\"Desert\",\"categoryid\":3}],\"allergies\":[],\"restaurantid\":1,\"foodlang\":[{\"name\":\"Baklava\",\"description\":\"Baklava with ice cream\",\"lang\":\"en\"},{\"name\":\"Baklava\",\"description\":\"Baklava con helado\",\"lang\":\"es\"},{\"name\":\"Baklava\",\"description\":\"Baklava amb gelat\",\"lang\":\"cat\"}],\"mainid\":5},{\"foodid\":6,\"images\":[{\"mainid\":8,\"url\":\"images/dionisos/food\",\"name\":\"\",\"type\":3,\"creationdate\":\"2017-02-07T12:03:15Z\",\"lastmodifieddate\":\"2017-02-07T12:03:15Z\"}],\"name\":\"Ravani\",\"restaurant\":\"Dionisos Aribau\",\"categories\":[{\"name\":\"Desert\",\"categoryid\":3}],\"allergies\":[],\"restaurantid\":1,\"foodlang\":[{\"name\":\"Ravani\",\"description\":\"Ravani with ice cream\",\"lang\":\"en\"},{\"name\":\"Ravani\",\"description\":\"Ravani con helado\",\"lang\":\"es\"},{\"name\":\"Ravani\",\"description\":\"Ravani amb gelat\",\"lang\":\"cat\"}],\"mainid\":6}]"
+				}
+			]
+		}
+	]
+}

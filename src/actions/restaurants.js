@@ -22,8 +22,10 @@ export function filterRestaurants(filter, searchText){
           city: searchText
         }
       }
-      const response = await fetchRestaurants(post)
-      dispatch({type:'LOAD_RESTAURANTS', payload:response })
+      const {restaurants, menusByRestaurantIdandDate, dishesByDishId} = await fetchRestaurants(post)
+      dispatch({type: 'LOAD_MENUS', payload: menusByRestaurantIdandDate})
+      dispatch({type: 'LOAD_DISHES', payload: dishesByDishId})
+      dispatch({type:'LOAD_RESTAURANTS', payload: restaurants})
     } catch (e) {
       console.logException('Filter Restaurant Error', e)
       dispatch({type:'FETCH_RESTAURANTS_FAIL'})

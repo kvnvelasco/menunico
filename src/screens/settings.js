@@ -43,7 +43,7 @@ class Home extends Component {
   render() {
     return (
       <View padding={[20,20,20,20]} align='stretch' justify='space-between' background='white'>
-        <Text align='center' size={20} color='#F44E3F'>Settings</Text>
+        <Text align='center' size={24} color='#F44E3F'>Settings</Text>
         <View align='stretch' justify='space-between' padding={[100,0,100]}>
           <TouchableOpacity onPress={this._navigateTo.bind(this, 'communication')}>
             <View direction='row' align='stretch' justify='space-between' flex={0}>
@@ -77,7 +77,7 @@ class Communication extends Component {
           </View>
           <Text>
             <Text bold>Address:</Text>
-            {" Carrer Torrent d’en Vidalet 21, 08012, Barcelona, Spain"}
+            {" Carrer Torrent d’en \n Vidalet 21, 08012, Barcelona, \n Spain"}
           </Text>
         </View>
         <View direction='row' flex={0} margin={[20]}>
@@ -112,23 +112,25 @@ class About extends Component {
   }
   render() {
     return (
-      <View padding={[0,20,20,20]} align='stretch' background='white'>
+      <View padding={[0,20,20,20]} align='stretch' justify='space-between' background='white'>
         <Text align='center' size={20} color='#F44E3F'>About</Text>
-        <TouchableOpacity onPress={this._navigateTo.bind(this, 'terms')}>
-          <View direction='row' align='stretch' justify='space-between' flex={0} margin={[20,0,20]}>
-            <Text>Terms and Conditions</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this._navigateTo.bind(this, 'privacy')}>
-          <View direction='row' align='stretch' justify='space-between'  flex={0} margin={[20,0,20]}>
-            <Text>Data Privacy</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this._navigateTo.bind(this, 'version')}>
-          <View direction='row' align='stretch' justify='space-between'  flex={0} margin={[20,0,20]}>
-            <Text>Version</Text>
-          </View>
-        </TouchableOpacity>
+        <View align='stretch' justify='space-between' padding={[100,0,100]}>
+          <TouchableOpacity onPress={this._navigateTo.bind(this, 'terms')}>
+           <View direction='row' align='stretch' justify='space-between' flex={0} margin={[20,0,20]}>
+             <Text>Terms and Conditions</Text>
+           </View>
+         </TouchableOpacity>
+         <TouchableOpacity onPress={this._navigateTo.bind(this, 'privacy')}>
+           <View direction='row' align='stretch' justify='space-between'  flex={0} margin={[20,0,20]}>
+             <Text>Data Privacy</Text>
+           </View>
+         </TouchableOpacity>
+         <TouchableOpacity onPress={this._navigateTo.bind(this, 'version')}>
+           <View direction='row' align='stretch' justify='space-between'  flex={0} margin={[20,0,20]}>
+             <Text>Version</Text>
+           </View>
+         </TouchableOpacity>
+        </View>
       </View>
     )
   }

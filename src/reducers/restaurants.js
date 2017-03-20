@@ -5,23 +5,7 @@ const initialState = {
   },
   defaultFilters: {
     price: [0, 10],
-    cuisine: {
-      italian: true,
-      french: true,
-      chinese: true,
-      mexican: true,
-      japanese: true,
-      spanish: true
-    },
-    payment: {
-      cash: true,
-      visa: true,
-      masterCard: true,
-      maestro: true,
-      amex: true,
-      ticketRestaurant: true,
-      sodexo: true,
-    }
+    neighborhood: ''
   },
   fetching: false
 }
@@ -34,8 +18,12 @@ export default function reducer(state=initialState, action) {
       return {...state, fetching: false}
     case 'LOAD_RESTAURANTS':
       return {...state, list: action.payload, fetching: false}
+    case 'LOAD_MENUS':
+      return {...state, menus: action.payload}
+    case 'LOAD_DISHES':
+      return {...state, dishes: action.payload}
     case 'LOAD_FILTERS':
-      return {...state, defaultFilters: action.payload, filters: {...state.filters, ...action.payload}}
+      return {...state, defaultFilters: {...state.filters, ...action.payload}, filters: {...state.filters, ...action.payload}}
     case 'TOGGLE_FILTER':
       return {...state, filters: {
         ...state.filters,
@@ -49,6 +37,8 @@ export default function reducer(state=initialState, action) {
         ...state.filters,
         [action.payload]: state.defaultFilters[action.payload]
       }}
+    case 'RESET_ALL_FILTERS':
+      return {...state, filters: state.defaultFilters}
     case 'SET_PRICE_FILTER':
       return {...state, filters: {
         ...state.filters,

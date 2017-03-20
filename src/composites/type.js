@@ -10,9 +10,9 @@ export function TextWithIcon(props, state) {
   return (
     <View direction='row' align='center' flex={0}>
       <View flex={0} margin={[0,20]} width={(props.size || 16) + 2}>
-        <Icon name={props.icon} size={props.size || 16}/>
+        <Icon onPress={props.onPress}  name={props.icon} size={props.size || 16}/>
       </View>
-      <Text size={props.size || 16}>{props.text}</Text>
+      <Text onPress={props.onPress} size={props.size || 16}>{props.text}</Text>
     </View>
   )
 }

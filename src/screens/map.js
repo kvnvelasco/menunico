@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import Fa from 'react-native-vector-icons/FontAwesome'
 // actions
 import {geoSort, highLightResto} from 'menunico/src/actions/restaurants'
-import {logHeading, stopLogHeading, openFilters} from 'menunico/src/actions/global'
+import {logHeading, stopLogHeading, openFilters, tryToGetUserGeo} from 'menunico/src/actions/application'
 
 export default class Map extends Component {
   constructor() {
@@ -22,6 +22,7 @@ export default class Map extends Component {
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
+      this.props.dispatch(tryToGetUserGeo())
       this.props.dispatch(logHeading())
       this.setState({map: true})
     });
@@ -29,18 +30,18 @@ export default class Map extends Component {
 
   _getDistanceAndDirectionObject(restaurantCoords) {
     // get distance in degrees
-
     const user = this.props.location
+    if(!user) return {}
     const dist = Math.sqrt(Math.pow(restaurantCoords.lon - user.longitude, 2) + Math.pow(restaurantCoords.lat - user.latitude, 2))
     let conversionFactor
     switch(true) {
       case Math.abs(user.latitude) > 67 :
         conversionFactor = 43496
         break
-      case Math.abs(user.latitude) >45 :
+      case Math.abs(user.latitude) > 45 :
         conversionFactor = 78710
         break
-      case Math.abs(user.latitude) >23 :
+      case Math.abs(user.latitude) > 23 :
         conversionFactor = 102470
         break
       default:
@@ -59,7 +60,7 @@ export default class Map extends Component {
   }
 
   componentWillUnmount() {
-    stopLogHeading()
+    this.props.dispatch(stopLogHeading())
     this.props.dispatch({type: 'RESTAURANT_CLEAR_HIGHLIGHTED'})
   }
   _sortRestaurants(coords) {
@@ -106,10 +107,12 @@ export default class Map extends Component {
     const handler = highlighted ? this._openRestaurant.bind(this, resto.name, index)
     : this._moveToMarker.bind(this, resto, index)
     const {distance, angle} = this._getDistanceAndDirectionObject(resto.location)
+    let showVectors = true
+    if(!distance || !angle)  showVectors = false
     const rotator = {
       flex: 0,
       transform: [
-        {rotate: `${angle}deg`}
+        {rotate: `${angle || 0}deg`}
       ]
     }
     return (
@@ -124,7 +127,7 @@ export default class Map extends Component {
               <View style={rotator}>
                 <Icon name='arrow-upward' size={36} color='white'/>
               </View>
-              <Text size={12} color='white'>{distance}m</Text>
+              <Text size={12} color='white'>{showVectors ? `${distance}m` : 'Open Restaurant'}</Text>
             </View>
           }
           <View direction='row' justify='space-between'>
@@ -144,6 +147,7 @@ export default class Map extends Component {
         identifier={`${resto.mainid}`}
         key={index}
         title={resto.name}
+        onCalloutPress={this._openRestaurant.bind(this, resto.name, index)}
         coordinate={{
         latitude: resto.location.lat,
         longitude: resto.location.lon,
@@ -165,15 +169,17 @@ export default class Map extends Component {
 
 
   render(){
+    const location = this.props.location || {}
+
     return (
       <View align='stretch' justify='space-between' background='white'>
         <View align='stretch' margin={[60]}>
-          { this.state.map &&
+          { this.state.map && this.props.hasGeo && 
             <MapView
               onRegionChangeComplete={this._sortRestaurants}
               initialRegion={{
-                latitude: 	this.props.location.latitude,
-                longitude: this.props.location.longitude,
+                latitude: 	location.latitude || 41.3851,
+                longitude: location.longitude || 2.1734,
                 latitudeDelta: 0.125,
                 longitudeDelta: 0.125
               }}
@@ -182,7 +188,7 @@ export default class Map extends Component {
                 this.map = map
               }}
               style={StyleSheet.absoluteFillObject}
-              showsUserLocation={true}
+              showsUserLocation={this.props.location ? true : false}
               loadingEnabled={true}
               loadingIndicatorColor='white'
               loadingBackgroundColor='#F2504B'

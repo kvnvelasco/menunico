@@ -9,8 +9,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import Fa from 'react-native-vector-icons/FontAwesome'
 
 import moment from 'moment'
-import {openFilters} from 'menunico/src/actions/global'
+import {openFilters} from 'menunico/src/actions/application'
 import { openRestaurant, filterRestaurants } from 'menunico/src/actions/restaurants'
+import {tryToGetUserGeo} from 'menunico/src/actions/application'
 
 export default class Restaurants extends Component {
   constructor(props) {
@@ -23,54 +24,99 @@ export default class Restaurants extends Component {
        data: ds.cloneWithRows(props.restaurants)
      };
   }
-  componentWillReceiveProps(newProps,) {
+  componentWillReceiveProps(newProps) {
     if(newProps.restaurants !== this.props.restaurants)
       this.setState({
         data: this.state.ds.cloneWithRows(newProps.restaurants)
     })
   }
+
+
   _rowDiffHandler(r1, r2) {
     return r1.mainid !== r2.mainid
   }
+
   _navigateToRestaurant(index, name) {
     this.props.dispatch(openRestaurant(index, name))
   }
+
+  _getDistance(restaurantCoords) {
+    if(!this.props.hasGeo) return false
+    const user = this.props.location
+    const dist = Math.sqrt(Math.pow(restaurantCoords.lon - user.longitude, 2) + Math.pow(restaurantCoords.lat - user.latitude, 2))
+    let conversionFactor
+    switch(true) {
+      case Math.abs(user.latitude) > 67 :
+        conversionFactor = 43.496
+        break
+      case Math.abs(user.latitude) > 45 :
+        conversionFactor = 78.710
+        break
+      case Math.abs(user.latitude) > 23 :
+        conversionFactor = 102.470
+        break
+      default:
+        conversionFactor = 111.320
+    }
+    return (dist * conversionFactor).toFixed(2)
+  }
+
   _renderRestaurant(row, section, index) {
-    const {name, street, image, menu} = row
-    const {fullmenu} = row.rawMenu
+    const {name, street, image} = row
+    const menu = this.props.menus[row.mainid] || []
+    const menuAvailable = menu[moment().format('MM/DD/YYYY')]
+    const foodbyCategory = menuAvailable && menuAvailable.categories.reduce((acc, category, index) => {
+      if(index > 2) return acc
+      const food = category.foods.map(item => item.mainid)
+      const object = {
+        category: category.name,
+        food
+      }
+      return acc.concat(object)
+    }, [])
     const imageURL = 'https://s3.eu-central-1.amazonaws.com/menunico'
     let cover = row.mainImage
+    const distance = this._getDistance({lat: row.lat, lon: row.lng})
     return (
       <View align='stretch' flex={0} padding={[0,10,0,10]}>
         <TouchableOpacity key='index' delayPressOut={0} delayPressIn={0} onPress={this._navigateToRestaurant.bind(this, index, name)}>
           <View margin={[15]} direction='row' flex={0} align='center'>
-            <View align='stretch' width={150} height={150} flex={0}>
+            <View align='stretch' width={150} height={170} flex={0}>
               {cover && <Image full resizeMode='cover' source={{uri: `${imageURL}/${cover.url}/128x128/${cover.name}`}}/>}
             </View>
             <View margin={[0,0,0,10]}>
-              <Text size={16} color='#F2504B'>{name}</Text>
-              <Text size={12} color='#ccc'>{`${street}`}</Text>
+              <Text size={16} lines={2} color='#F2504B'>{name}</Text>
+              <Text size={12} lines={2} color='#ccc'>{`${street}`}</Text>
               <View>
-                {Object.keys(menu).map((item,index) => this._renderDish(item, menu[item][0].name, index))}
+                { menuAvailable
+                  ? foodbyCategory.map( (category, index) => {
+                      if(category.category == 'Appetizer') return null
+                      return (
+                        <Text size={12} lines={2}>
+                          <Text size={12} bold>{category.category}:
+                          </Text>
+                          {category.food.reduce((acc, food, index, arr) => {
+                            const dish = this.props.dishes[food]
+                            const showComma = arr.length > 1 && index < arr.length - 1
+                            return acc.concat(`${dish.name}${showComma ? ',' : ''} `)
+                          }, '')}
+                        </Text>
+                      )
+                    })
+                  : <Text color='#666' lines={4} size={13}>Today, the menu of the day hasn't been updated.</Text>
+                }
               </View>
             </View>
           </View>
-          <View direction='row' flex={0} justify='flex-end'>
-            <Text>{`${fullmenu}€`}</Text>
+          <View direction='row' flex={0} justify='space-between'>
+            <Text color='#666' size={14}>{this.props.hasGeo ? `${distance}km away` : 'GPS not available'}</Text>
+            <Text>{menuAvailable ? `${menuAvailable.fullmenu}€` : null}</Text>
           </View>
         </TouchableOpacity>
       </View>
     )
   }
 
-  _renderDish(name, dish, key) {
-    return (
-      <Text color='#666' key={key} size={14} lines={2}>
-        <Text color='#666' size={14}>{`${key + 1}. `}</Text>
-        {dish}
-      </Text>
-    )
-  }
   _renderSeparator(section, row) {
     const style = {
       borderStyle: 'solid',
@@ -94,6 +140,7 @@ export default class Restaurants extends Component {
   }
 
   _onRefresh() {
+    this.props.dispatch(tryToGetUserGeo())
     this.props.dispatch(filterRestaurants())
   }
 

@@ -9,12 +9,14 @@ import Filters from './filters'
 import Map from './map'
 import FAQ from './faq'
 import Settings from './settings'
-import { TextInput, TouchableOpacity } from 'react-native'
+import { TextInput, TouchableOpacity, AppState, NetInfo } from 'react-native'
 import { connect } from 'react-redux'
 import {Text} from 'menunico/src/components/type'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { filterRestaurants } from 'menunico/src/actions/restaurants'
 
+
+import {tryToGetUserGeo} from 'menunico/src/actions/application'
 class Menunico extends Component {
   constructor(){
     super()
@@ -23,6 +25,27 @@ class Menunico extends Component {
     searchText: ''
     }
   }
+
+  componentDidMount() {
+    // check internet access
+    NetInfo.fetch()
+      .done( reach => {
+        console.log('reach: ', reach)
+      })
+    AppState.addEventListener('change', this._checkRequiredConnections.bind(this))
+  }
+
+  _checkRequiredConnections(type) {
+    if(type == 'active') {
+      this.props.dispatch(tryToGetUserGeo())
+    }
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._checkRequiredConnections.bind(this))
+  }
+
+
   _backHandler() {
     this.props.dispatch({type:'NAVIGATE_POP'})
   }
@@ -52,15 +75,22 @@ class Menunico extends Component {
           data={this.props.navigator}
           dispatch={this.props.dispatch}>
           <Restaurants key='restaurants'
+            hasGeo={this.props.application.geoStatus}
+            location={this.props.user.geo}
             restaurants={this.props.restaurants.list}
+            dishes = {this.props.restaurants.dishes}
+            menus = {this.props.restaurants.menus}
             fetching={this.props.restaurants.fetching}
             static={this.props.static}/>
           <Restaurant key='restaurant'
             restaurants={this.props.restaurants.list}
+            dishes = {this.props.restaurants.dishes}
+            menus = {this.props.restaurants.menus}
             static={this.props.static}/>
           <Dish key='dish' static={this.props.static} data={this.props.restaurants.selectedDish} static={this.props.static}/>
           <Filters key='filters'/>
           <Map restaurants={this.props.restaurants.list}
+            hasGeo={this.props.application.geoStatus}
             location={this.props.user.geo}
             heading={this.props.user.heading}
             highlighted={this.props.restaurants.highlighted}
@@ -74,6 +104,7 @@ class Menunico extends Component {
           justify={currentRoute.title && !showSearch
           ? 'flex-start' : 'space-between'}
           padding={[10,20,0,20]}
+          pointerEvents='box-none'
           background={navbarStyle.background || 'white'}>
           {navbarState
             ? <TouchableOpacity
@@ -123,5 +154,6 @@ export default connect( store => ({
   restaurants: store.restaurants,
   selected: store.restaurants.selected,
   static: store.static,
-  user: store.user
+  user: store.user,
+  application: store.application
 }))(Menunico)

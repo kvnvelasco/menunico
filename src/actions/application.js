@@ -1,10 +1,9 @@
+
 import {fetchRestaurants, getFilters, getMenusByRestaurantIds, getDishById} from './api'
 import {ToastAndroid, PermissionsAndroid} from 'react-native'
 
 import { DeviceEventEmitter, InteractionManager } from 'react-native'
 import ReactNativeHeading from 'react-native-heading'
-
-
 
 export function bootstrap() {
   return async dispatch => {
@@ -23,7 +22,9 @@ export function bootstrap() {
         }
       }
       const filters = await getFilters()
-      const restaurants = await fetchRestaurants(request)
+      const {restaurants, menusByRestaurantIdandDate, dishesByDishId} = await fetchRestaurants(request)
+      await dispatch({type: 'LOAD_MENUS', payload: menusByRestaurantIdandDate})
+      await dispatch({type: 'LOAD_DISHES', payload: dishesByDishId})
       await dispatch({type:'LOAD_RESTAURANTS', payload: restaurants})
       await dispatch({type: 'LOAD_FILTERS', payload: filters})
       const navigate = {
@@ -37,6 +38,13 @@ export function bootstrap() {
   }
 }
 
+
+export function tryToGetUserGeo() {
+  return async dispatch => {
+    const coords = await getLocationInformation(dispatch)
+  }
+}
+
 async function getLocationInformation(dispatch) {
   try {
     const geoPromise = new Promise( (resolve, reject) => {
@@ -46,9 +54,13 @@ async function getLocationInformation(dispatch) {
     dispatch({type: 'USER_GEO', payload: geo.coords})
     navigator.geolocation.watchPosition( (succ, err) => {
       if(succ) dispatch({type: 'USER_GEO', payload: succ.coords})
-    }, {enableHighAccuracy: true})
+    }, _ => {
+      dispatch({type: 'NO_GEOLOCATION_AVAILABLE'})
+      console.log(_)
+    }, {enableHighAccuracy: true} )
     return geo.coords
   } catch (e) {
+    ToastAndroid.show('To get the most out of Menunico, enable the GPS', ToastAndroid.LONG)
     dispatch({type: 'NO_GEOLOCATION_AVAILABLE'})
   }
 }
@@ -64,21 +76,22 @@ export function logHeading() {
   }
 }
 
+export function stopLogHeading() {
+  return async dispatch => {
+    ReactNativeHeading.stop();
+    DeviceEventEmitter.removeAllListeners('headingUpdated');
+  }
+}
+
 export function openFilters() {
   return async dispatch => {
     const navigate = {
       route: {
         key: 'filters',
-        animation: 'FloatFromBottom',
-        showSearch: false
+        animation: 'FloatFromBottom'
       },
       id: 'menunico'
     }
     dispatch({type: 'NAVIGATE_PUSH', payload: navigate})
   }
-}
-
-export function stopLogHeading() {
-  ReactNativeHeading.stop();
-  DeviceEventEmitter.removeAllListeners('headingUpdated');
 }

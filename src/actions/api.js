@@ -26,63 +26,88 @@ api.interceptors.response.use(response => {
 
 export async function fetchRestaurants(search={}) {
   try {
-    const {items} = await api.post('search/restaurant', search)
-    if(!items) return []
+    // search deconstruction
+    const { restaurantid, date } = search
+
+    const { items, result } = await api.post('search/restaurant', search)
+    if(result !== 'success') throw new ApiError('Failed to fetch restaurants')
+
+    // Validate the response
     const validatedResponse = items.filter(restaurantValidator)
+
+    // Get primary image of restaurants
+    const restaurants = validatedResponse.map(restaurantPrimaryImageFinder)
+
+    // Build an array of menu promises
     const menuPromises = validatedResponse.map( item => {
       return getMenuByRestaurantId(item.mainid)
     })
+
+    // Get all the menus back
     const returnedMenus = await Promise.all(menuPromises)
+
+    // coerce promises into single array and filter them
     const menus = returnedMenus.reduce((acc, item) => {
       return [...acc, ...(item.items || [])]
     }, [])
-
-    const menusByRestaurantId = menus.reduce( (acc, item) => {
-      return {...acc, [item.restaurantid]: item}
-    }, {})
-    const responseWithMainImages = validatedResponse.map(restaurantPrimaryImageFinder)
-
-    const restaurantsWithMenus = responseWithMainImages.map( restaurant => {
-      if(!menusByRestaurantId[restaurant.mainid]) return null
-      const rawMenu = menusByRestaurantId[restaurant.mainid]
-      const menu = rawMenu.categories.sort( (a, b) => a.categoryid - b.categoryid).reduce( (acc, item) => {
-        return {...acc, [item.name]: item.foods.map(item => item.mainid)}
-      }, {})
-      const dishes = Object.keys(menu).reduce((acc, item) => {
-        return [...acc, ...menu[item]]
-      },[])
-      return {...restaurant, menu, dishes, rawMenu}
+    .filter( menu => {
+      // remove the menus that come before today
+      return !(moment(menu.menudate, 'MM/DD/YYYY').isBefore(moment(), 'day'))
     })
 
-    const dishIds = restaurantsWithMenus.reduce( (acc, item) => {
-      if(!item) return acc
-      return [...acc, ...item.dishes]
+    // create an index of all the menus by restaurantID
+    const menusByRestaurantId = menus.reduce( (acc, item) => {
+      const menus = [...(acc[item.restaurantid] || []), item].sort((l,r) => {
+        const left = moment(l.menudate, 'MM/DD/YYYY')
+        const right = moment(r.menudate, 'MM/DD/YYYY')
+        return left.diff(right, 'days')
+      })
+      .map( item => {
+        // sort the categories
+        const categories = item.categories.sort( (a,b) => {
+          return a.categoryid - b.categoryid
+        })
+        return {...item, categories}
+      })
+      return {...acc, [item.restaurantid]: menus}
+    }, {})
+
+
+    const menusByRestaurantIdandDate = Object.keys(menusByRestaurantId || [])
+      .reduce( (acc, item) => {
+        const menu = menusByRestaurantId[item] || []
+        const menusByDate = menu.reduce((acc, item) => {
+          return {...acc, [item.menudate]: item}
+        }, {})
+        return {...acc, [item]: menusByDate}
+      }, {})
+
+    // final object:
+    // "<id>" : {
+    //  "<DD/MM/YYYY": {
+    //    Menu proper
+    //  }
+    // }
+
+    // Get the dish IDs
+    const dishIds = menus.reduce( (acc, item) => {
+      const categories = item.categories.reduce( (acc, category) => {
+        const food = category.foods.map(item => item.mainid)
+        return acc.concat(food)
+      }, [])
+      return acc.concat(categories)
     }, [])
+
     const dishes = await getDishesByIds(dishIds)
+
     const dishesByDishId = dishes.reduce( (acc, item) => {
       return {...acc, [item.foodid]: item}
     }, {})
 
-    const completeRestaurants = restaurantsWithMenus.map( item => {
-      if(!item) return null
-      let menu = {}
-      for (var key in item.menu) {
-        menu[key] = item.menu[key].map( item => {
-          const dish = dishesByDishId[item]
-          return {
-            name: dish.name,
-            descriptions: dish.foodlang.reduce( (acc, item) => {
-              return {...acc, [item.lang]: item}
-            }, {}),
-            images: dish.images
-          }
-        })
-      }
-      return {...item, menu}
-    })
-    const restaurants = completeRestaurants.filter( item => item)
-    return restaurants
+    return {restaurants, menusByRestaurantIdandDate, dishesByDishId}
+    
   } catch (e) {
+    return []
     console.logException('Api error',e)
     throw new ApiError(e)
   }
@@ -102,6 +127,7 @@ export async function getFilters() {
 
 export async function getMenuByRestaurantId(id, fromDate, toDate) {
   try {
+    // DD/MM/YYYY
     const dateFormat = /[0-9]{2}\/[0-1][0-9]\/[0-9]{4}/
     if(fromDate && fromDate.match(dateFormat) && toDate&& toDate.match(dateFormat)) {
       const data = {
@@ -164,7 +190,6 @@ function restaurantPrimaryImageFinder(item) {
     return {...item, image: images}
   }
 }
-
 
 
 // Search Parameters

@@ -11,7 +11,7 @@ export default class FAQ extends Component {
       <View background='white' align='stretch' padding={[0,20,0,20]} margin={[60]}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View align='stretch' margin={[0,0,15]} flex={0}>
-            <Text size={20} color='#F2504B' align='center'>Frequently Asked Questions</Text>
+            <Text size={24} color='#F2504B' align='center'>Frequently Asked Questions</Text>
           </View>
           <ParagraphText heading='Who can use menúnico?'>
             People who want to know in advance the menu of the day of the restaurants around their home and/or their work. Menúnico can be also useful for tourists that are not familiar with the city and its restaurants. Last but not least, menúnico can be used by the restaurant owners in order to publicize their daily menu.

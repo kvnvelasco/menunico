@@ -12,6 +12,11 @@ export default class Dish extends Component {
     const {height, width} = Dimensions.get('window')
     this.width = width
   }
+
+  _pop() {
+    this.props.dispatch({type: 'NAVIGATE_POP'})
+  }
+
   render() {
     const data = this.props.data
     const resto = data.restaurant
@@ -27,21 +32,12 @@ export default class Dish extends Component {
           </View>
           <View flex={0} padding={[20,20,20,20]}>
             <Text size={28} bold color='#F2504B'>{dish.name}</Text>
-            <Text size={16} bold >{resto.name}</Text>
+            <Text size={16} bold onPress={this._pop.bind(this)} >{resto.name}</Text>
           </View>
           <View padding={[0,20,20,20]}>
             <Text size={16} lines={12}>
-              {dish.descriptions.en.description}
+              {dish.foodlang[0].description}
             </Text>
-          </View>
-          <View padding={[0,20,20,20]}>
-            <TextWithIcon size={14} icon='phone' text={resto.telephone} />
-            <TextWithIcon size={14} icon='globe' text={resto.webpage} />
-            <TextWithIcon size={14} icon='facebook' text={resto.facebook} />
-            <TextWithIcon size={14} icon='twitter' text={resto.twitter} />
-          </View>
-          <View padding={[0, 40, 40, 40]}>
-            <Text align='center' color='#F2504B' bold>" Check out other dishes by this restaurant "</Text>
           </View>
         </ScrollView>
         <View style={style.icons} direction='row' justify='flex-end' padding={[10,10,10,10]}>

@@ -25,11 +25,10 @@ export default class menunico extends Component {
       .done( reach => {
         console.log('reach: ', reach)
       })
-    AppState.addEventListener('change', console.log)
   }
 
+
   componentWillUnmount() {
-    AppState.removeEventListener('change', console.log)
   }
 
   render() {

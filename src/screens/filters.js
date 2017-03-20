@@ -17,13 +17,19 @@ class Filters extends Component {
       loaded: false
     }
   }
+
   render() {
+    const route = {
+      key: 'home',
+      extra: <Text onPress={e => this.props.dispatch({type: 'RESET_ALL_FILTERS'})} color='#F2504B'>Reset All</Text>
+    }
     return (
-      <View background='white' margin={[60]} align='stretch'>
+      <View margin={[60]} align='stretch'>
         <Navigator
           id='filters'
           dispatch={this.props.dispatch}
-          data={this.props.navigator} >
+          data={this.props.navigator}
+          initialRoute={route} >
           <Home filters={this.props.filters} key='home'/>
           <Cuisine defaultFilters={this.props.defaultFilters.origins}  filters={this.props.filters.origins || {}} key='origins'/>
           <Preferences key='types' prefs={this.props.prefs} filters={this.props.filters.types || {}} />
@@ -63,7 +69,7 @@ class Home extends Component {
   }
 
   _renderReset(item) {
-    return <Text onPress={this._reset.bind(this,item)} color='#F2504B'>Reset All</Text>
+    return <Text onPress={this._reset.bind(this, item)} color='#F2504B'>Reset All</Text>
   }
 
   _setPricePoint(point){
@@ -94,7 +100,7 @@ class Home extends Component {
             color='#aaa'>
             {Object.keys(this.props.filters.origins || {}).reduce((acc, item, index, arr) => {
             return acc + (this.props.filters.origins[item] ? `${item.charAt(0).toUpperCase() + item.slice(1)}  ` : '')
-          }, '') || 'All Cuisines'}</Text>
+          }, '') || 'No Cuisine Selected'}</Text>
         </View>
 
         <Button
@@ -208,7 +214,7 @@ class Cuisine extends Component {
         <Button
           onPress={e => this.props.navigator.pop()}
           color='#F2504B'
-          title='Save Filters'/>
+          title='Set Filters'/>
       </View>
     )
   }
@@ -313,7 +319,7 @@ class Preferences extends Component {
         <Button
           onPress={e => this.props.navigator.pop()}
           color='#F2504B'
-          title='Save Filters'/>
+          title='Set Filters'/>
       </View>
     )
   }
@@ -331,6 +337,8 @@ class Payment extends Component {
 
 
   render() {
+    const cardHeight = 37.4
+    const cardWidth = 44
     return (
       <View align='stretch' padding={[20,20,20,20]} background='white'>
         <Text
@@ -342,6 +350,8 @@ class Payment extends Component {
             justify='space-between' align='center'>
             <Text>Cash</Text>
             <CheckImage
+              height={cardHeight}
+              width={cardWidth}
               image={this.props.cards.cash}
               checked={this.props.filters['Cash']}
               handler={this.filterSelector.bind(this, 'Cash', this.props.filters['Cash'])} />
@@ -350,22 +360,28 @@ class Payment extends Component {
             justify='space-between' align='center'>
             <Text>Visa</Text>
             <CheckImage
+              height={cardHeight}
+              width={cardWidth}
               image={this.props.cards.visa}
-              checked={this.props.filters['Visa Mastercard']}
-              handler={this.filterSelector.bind(this, 'Visa Mastercard', this.props.filters['Visa Mastercard'])} />
+              checked={this.props.filters['Visa']}
+              handler={this.filterSelector.bind(this, 'Visa', this.props.filters['Visa'])} />
           </View>
           <View direction='row' flex={0}
             justify='space-between' align='center'>
             <Text>Master Card</Text>
             <CheckImage
+              height={cardHeight}
+              width={cardWidth}
               image={this.props.cards.masterCard}
-              checked={this.props.filters["Visa Mastercard"]}
-              handler={this.filterSelector.bind(this, "Visa Mastercard", this.props.filters["Visa Mastercard"])} />
+              checked={this.props.filters["Mastercard"]}
+              handler={this.filterSelector.bind(this, "Mastercard", this.props.filters["Mastercard"])} />
           </View>
           <View direction='row' flex={0}
             justify='space-between' align='center'>
             <Text>Maestro</Text>
             <CheckImage
+              height={cardHeight}
+              width={cardWidth}
               image={this.props.cards.maestro}
               checked={this.props.filters["Maestro"]}
               handler={this.filterSelector.bind(this, "Maestro", this.props.filters["Maestro"])} />
@@ -374,6 +390,8 @@ class Payment extends Component {
             justify='space-between' align='center'>
             <Text>American Express</Text>
             <CheckImage
+              height={cardHeight}
+              width={cardWidth}
               image={this.props.cards.amex}
               checked={this.props.filters["American Express"]}
               handler={this.filterSelector.bind(this, "American Express", this.props.filters["American Express"])} />
@@ -382,6 +400,8 @@ class Payment extends Component {
             justify='space-between' align='center'>
             <Text>Ticket Restaurant</Text>
             <CheckImage
+              height={cardHeight}
+              width={cardWidth}
               image={this.props.cards.ticketRestaurant}
               checked={this.props.filters["Ticket Restaurant"]}
               handler={this.filterSelector.bind(this, "Ticket Restaurant", this.props.filters["Ticket Restaurant"])} />
@@ -390,6 +410,8 @@ class Payment extends Component {
             justify='space-between' align='center'>
             <Text>Sodexo</Text>
             <CheckImage
+              height={cardHeight}
+              width={cardWidth}
               image={this.props.cards.sodexo}
               checked={this.props.filters["Sodaxo"]}
               handler={this.filterSelector.bind(this, "Sodaxo", this.props.filters["Sodaxo"])} />
@@ -398,7 +420,7 @@ class Payment extends Component {
         <Button
           onPress={e => this.props.navigator.pop()}
           color='#F2504B'
-          title='Save Filters'/>
+          title='Set Filters'/>
       </View>
     )
   }

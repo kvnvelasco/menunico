@@ -50,7 +50,7 @@ export class ApiError {
 // Handlers
 
 export function exceptionHandlersInit() {
-  if(process.env.NODE_ENV !== 'production') return console.logException = x => false
+  if(process.env.NODE_ENV === 'development') return console.logException = (msg, err) => console.error(msg, err)
    raven_rn(raven)
   raven
     .config('https://29553d0f5989462d9cbd4656a2838fa6@sentry.io/127539', { release: "0.2.4" })

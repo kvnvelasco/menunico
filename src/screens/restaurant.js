@@ -19,17 +19,21 @@ export default class Restaurant extends Component {
     return r1mainid !== r2.mainid
   }
 
-  offsetList(offset) {
-    setTimeout( x => this.restaurant.scrollTo({x: offset}, false), 0)
-  }
 
   _renderRestaurant(restaurant, secIndex, rowIndex) {
     const index = this.props.route.index
     const offset = index * this.dimensions.width
+
+    function offsetList(offset) {
+      this.restaurant.scrollTo({x: offset, animated: false})
+    }
+
     return (
       <RestaurantSingle dispatch={this.props.dispatch} navigator={this.props.navigator}
-        offsetList={index == rowIndex ? this.offsetList.bind(this, offset) : x => false }
+        offsetList={offsetList.bind(this, offset)}
         restaurant={restaurant}
+        dishes = {this.props.dishes}
+        menus = {this.props.menus}
         static={this.props.static}/>
     )
   }
@@ -42,7 +46,7 @@ export default class Restaurant extends Component {
           ref={restaurant => this.restaurant = restaurant}
           enableEmptySections={true}
           pageSize={1}
-          initialListSize={2}
+          initialListSize={(index + 1)}
           pagingEnabled={true}
           dataSource={this.state.data}
           renderRow={this._renderRestaurant.bind(this)}>
