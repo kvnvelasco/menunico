@@ -9,9 +9,8 @@ const initialState = {
     latitudeDelta: 0.125,
     longitudeDelta: 0.125
   },
-  pins: [],
+  pins: {},
   rotation: new Animated.Value(0),
-  heading: undefined,
   highlighted: undefined,
   controlMode: 'ribbon',
 }
@@ -27,6 +26,13 @@ export default function reducer(state=initialState, action) {
       return {...state, controlMode: payload}
     case 'HIGHLIGHT_RESTAURANT':
       return {...state, highlighted: payload}
+    case 'NEW_PIN':
+      return {...state, pins: {
+        ...state.pins,
+        [payload.id]: payload.pin
+      }}
+    case 'GEOLOCATON_WATCH_ID':
+      return {...state, watchID: payload}
     default:
       return state
   }

@@ -1,4 +1,5 @@
-import {ToastAndroid, PermissionsAndroid} from 'react-native'
+import {ToastAndroid, PermissionsAndroid, DeviceEventEmitter, InteractionManager} from 'react-native'
+import ReactNativeHeading from 'react-native-heading'
 
 export function getLocationInformation(dispatch) {
   return async dispatch => {
@@ -7,7 +8,6 @@ export function getLocationInformation(dispatch) {
         navigator.geolocation.getCurrentPosition(resolve, reject)
       })
       const geo = await geoPromise
-      console.log(geo)
       dispatch({type: 'USER_GEO', payload: geo.coords})
       return geo.coords
     } catch (e) {
@@ -38,9 +38,27 @@ export function monitorGeo() {
 export function stopMonitorGeo(ID) {
   return async dispatch => {
     try {
-      return await navigator.clearWatch(ID)
+      return await navigator.geolocation.clearWatch(ID)
     } catch (e) {
       console.error(e)
     }
+  }
+}
+
+export function logHeading() {
+  return async dispatch => {
+    const heading = await ReactNativeHeading.start(5)
+    DeviceEventEmitter.addListener('headingUpdated', data => {
+      InteractionManager.runAfterInteractions(x => {
+        dispatch({type: 'USER_HEADING', payload: data.heading})
+      })
+    })
+  }
+}
+
+export function stopLogHeading() {
+  return async dispatch => {
+    ReactNativeHeading.stop();
+    DeviceEventEmitter.removeAllListeners('headingUpdated');
   }
 }

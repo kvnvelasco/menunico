@@ -89,7 +89,10 @@ class Menunico extends Component {
             static={this.props.static}/>
           <Dish key='dish' static={this.props.static} data={this.props.restaurants.selectedDish} static={this.props.static}/>
           <Filters key='filters'/>
-          <Map restaurants={this.props.restaurants.list}
+          <Map
+            location={this.props.user.geo}
+            heading={this.props.user.heading}
+            restaurants={this.props.restaurants.list}
             key='map' />
           <FAQ key='faq'/>,
           <Settings key='settings' />

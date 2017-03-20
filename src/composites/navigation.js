@@ -2,8 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { BackAndroid,
           TouchableOpacity,
           StyleSheet,
-          Navigator as NativeNavigator,
-          InteractionManager } from 'react-native'
+          Navigator as NativeNavigator } from 'react-native'
 let Back = BackAndroid
 
 import { View } from 'menunico/src/components/layout'

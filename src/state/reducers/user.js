@@ -1,4 +1,7 @@
-const initialState = {}
+const initialState = {
+  geo: {},
+  heading: {}
+}
 
 export default function user(state=initialState, action) {
   const {type, payload} = action
