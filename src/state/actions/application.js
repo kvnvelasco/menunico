@@ -33,7 +33,7 @@ export function bootstrap() {
       }
       dispatch({type: 'NAVIGATE_REPLACE', payload: navigate})
     } catch (e) {
-      console.logException('Bootstrap Error', e)
+      console.logException('Bootstrap Error', e )
     }
   }
 }

@@ -9,7 +9,7 @@ import MapView from 'react-native-maps'
 import moment from 'moment'
 import { StyleSheet, Dimensions, TouchableOpacity, ScrollView, InteractionManager } from 'react-native'
 
-import { web, phonecall, share } from 'menunico/src/actions/comms'
+import { web, phonecall, share } from 'menunico/src/state/actions/comms'
 
 const styles = StyleSheet.create({
   map: {

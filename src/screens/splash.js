@@ -3,7 +3,7 @@ import { View } from 'menunico/src/components/layout'
 import { Image } from 'menunico/src/components/media'
 
 import splash from 'menunico/src/static/splash.jpg'
-import { bootstrap } from 'menunico/src/actions/application'
+import { bootstrap } from 'menunico/src/state/actions/application'
 import {once} from 'lodash'
 const one = once(bootstrap)
 

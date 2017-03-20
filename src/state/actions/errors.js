@@ -1,6 +1,6 @@
 import raven from 'raven-js'
 import raven_rn from 'raven-js/plugins/react-native'
-import store from 'menunico/src/store'
+import store from 'menunico/src/state/store'
 
 // errors
 export const error = {

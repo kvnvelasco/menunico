@@ -6,7 +6,7 @@ import {Button, Dimensions, ScrollView} from 'react-native'
 import {connect} from 'react-redux'
 import {CheckBox, CheckImage} from 'menunico/src/components/interactive'
 import Slider from '@ptomasroos/react-native-multi-slider'
-import {filterRestaurants, selectNeighborhood} from 'menunico/src/actions/restaurants'
+import {filterRestaurants, selectNeighborhood} from 'menunico/src/state/actions/restaurants'
 
 import Svg, {Path, Text as SvgText} from 'react-native-svg'
 

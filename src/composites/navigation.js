@@ -7,7 +7,7 @@ import { BackAndroid,
 let Back = BackAndroid
 
 import { View } from 'menunico/src/components/layout'
-import { push, pop, replace } from 'menunico/src/actions/navigation'
+import { push, pop, replace } from 'menunico/src/state/actions/navigation'
 
 import Icon from 'react-native-vector-icons'
 

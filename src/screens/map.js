@@ -8,16 +8,20 @@ import { debounce } from 'lodash'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Fa from 'react-native-vector-icons/FontAwesome'
 // actions
-import {geoSort, highLightResto} from 'menunico/src/actions/restaurants'
-import {logHeading, stopLogHeading, openFilters, tryToGetUserGeo} from 'menunico/src/actions/application'
+import {geoSort, highLightResto} from 'menunico/src/state/actions/restaurants'
+import {logHeading, stopLogHeading, openFilters, tryToGetUserGeo} from 'menunico/src/state/actions/application'
 
 export default class Map extends Component {
   constructor() {
     super()
     this.map = {}
-    this.state = {map: false, currRotation: new Animated.Value(0)}
+    this.state = {
+        map: false,
+        currRotation: new Animated.Value(0),
+        controlMode: 'ribbon'
+      }
     this.pins = {}
-    this._sortRestaurants = this._sortRestaurants.bind(this)
+    this._sortRestaurants = debounce(this._sortRestaurants.bind(this), 500)
   }
 
   componentDidMount() {
@@ -63,8 +67,10 @@ export default class Map extends Component {
     this.props.dispatch(stopLogHeading())
     this.props.dispatch({type: 'RESTAURANT_CLEAR_HIGHLIGHTED'})
   }
+
   _sortRestaurants(coords) {
-    // this.props.dispatch(geoSort(geoBox, this.props.restaurants))
+    console.info('Sorting Restaurants by', coords)
+    this.props.dispatch(geoSort(geoBox, this.props.restaurants))
     const closest = this.props.restaurants.reduce((acc, item, index) => {
       // compute distance of each one to geobox center manhattan distance is fine for now.
       const dist = Math.abs((coords.latitude - item.location.lat) + (coords.longitude - item.location.lon))
@@ -155,11 +161,13 @@ export default class Map extends Component {
   }
 
   _moveToMarker(resto, index, event) {
+    console.info('moving to marker', resto.location)
+    this.setState({controlMode: 'ribbon'})
     const region = {
       latitude: resto.location.lat,
       longitude: resto.location.lon,
-      latitudeDelta: 0.003,
-      longitudeDelta: 0.003
+      latitudeDelta: 0.005,
+      longitudeDelta: 0.005
     }
     this.map.animateToRegion(region, 500)
     this.pins[resto.mainid].showCallout()
@@ -174,15 +182,19 @@ export default class Map extends Component {
     return (
       <View align='stretch' justify='space-between' background='white'>
         <View align='stretch' margin={[60]}>
-          { this.state.map && this.props.hasGeo && 
+          { this.state.map && this.props.hasGeo &&
             <MapView
-              onRegionChangeComplete={this._sortRestaurants}
+              onRegionChangeComplete={this.state.controlMode === 'map' ? this._sortRestaurants : undefined}
               initialRegion={{
                 latitude: 	location.latitude || 41.3851,
                 longitude: location.longitude || 2.1734,
                 latitudeDelta: 0.125,
                 longitudeDelta: 0.125
               }}
+              onPanDrag={ _ => {
+                this.setState({controlMode: 'map'})
+              }}
+              scrollEnabled={ this.state.controlMode === 'map' ? true : false}
               ref={map => {
                 // map.fitToElements(true)
                 this.map = map
@@ -196,6 +208,7 @@ export default class Map extends Component {
                 {this.props.restaurants.map(this._renderPin.bind(this))}
             </MapView>
           }
+
           <View flex={0} justify='flex-end' align='center' height={30} margin={[0,0,40]} style={{bottom: 50, position: 'absolute', right:0, left:0}}>
             <TouchableOpacity delayPressOut={0}
               onPress={e => this.props.dispatch(openFilters())}>
@@ -210,6 +223,9 @@ export default class Map extends Component {
               </View>
             </TouchableOpacity>
           </View>
+        </View>
+        <View flex={0}>
+            <Text size={16}>{this.state.controlMode}</Text>
         </View>
         <View height={170} align='stretch' flex={0}>
           <ScrollView

@@ -13,10 +13,10 @@ import { TextInput, TouchableOpacity, AppState, NetInfo } from 'react-native'
 import { connect } from 'react-redux'
 import {Text} from 'menunico/src/components/type'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import { filterRestaurants } from 'menunico/src/actions/restaurants'
+import { filterRestaurants } from 'menunico/src/state/actions/restaurants'
 
 
-import {tryToGetUserGeo} from 'menunico/src/actions/application'
+import {tryToGetUserGeo} from 'menunico/src/state/actions/application'
 class Menunico extends Component {
   constructor(){
     super()

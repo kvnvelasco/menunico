@@ -6,9 +6,9 @@ import { Provider, connect } from 'react-redux'
 import { Navigator } from 'menunico/src/composites/navigation'
 import {AppState, NetInfo} from 'react-native'
 
-import {exceptionHandlersInit} from 'menunico/src/actions/errors'
+import {exceptionHandlersInit} from 'menunico/src/state/actions/errors'
 
-import store from './store'
+import store from './state/store'
 const ConnectedNavigator = connect(store => ({
   data: store.navigation.main
 }))(Navigator)
