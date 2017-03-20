@@ -18,7 +18,7 @@ const ConnectedNavigator = connect(store => ({
 
 export default class menunico extends Component {
 
-  componentDidMount() {
+  componentWillMount() {
     exceptionHandlersInit()
     // check internet access
     NetInfo.fetch()
@@ -42,7 +42,7 @@ export default class menunico extends Component {
         </Provider>
       );
     } catch (e) {
-      console.logException(e)
+      // console.logException(e)
     }
   }
 }

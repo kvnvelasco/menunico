@@ -1,4 +1,4 @@
-package com.menunico;
+package es.menunico;
 
 import android.app.Application;
 

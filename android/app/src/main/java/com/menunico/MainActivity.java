@@ -1,4 +1,4 @@
-package com.menunico;
+package es.menunico;
 
 import com.facebook.react.ReactActivity;
 

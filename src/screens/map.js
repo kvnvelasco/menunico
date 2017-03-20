@@ -1,35 +1,32 @@
 import React, { Component } from 'react'
-import { View } from 'menunico/src/components/layout'
-import { Text } from 'menunico/src/components/type'
-import { Image } from 'menunico/src/components/media'
+import { View, Image, Text } from 'menunico/src/components/layout'
 import MapView from 'react-native-maps'
-import { StyleSheet, Button, ScrollView, InteractionManager, TouchableOpacity, Animated} from 'react-native'
-import { debounce } from 'lodash'
+import { StyleSheet, Button, ScrollView, InteractionManager, TouchableOpacity} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Fa from 'react-native-vector-icons/FontAwesome'
 // actions
 import {geoSort, highLightResto} from 'menunico/src/state/actions/restaurants'
-import {logHeading, stopLogHeading, openFilters, tryToGetUserGeo} from 'menunico/src/state/actions/application'
+import {openFilters} from 'menunico/src/state/actions/application'
+import {tryToGetUserGeo, monitorGeo, stopMonitorGeo} from 'menunico/src/state/actions/device'
 
 export default class Map extends Component {
   constructor() {
     super()
     this.map = {}
-    this.state = {
-        map: false,
-        currRotation: new Animated.Value(0),
-        controlMode: 'ribbon'
-      }
-    this.pins = {}
-    this._sortRestaurants = debounce(this._sortRestaurants.bind(this), 500)
+    this._sortRestaurants = this._sortRestaurants.bind(this)
   }
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
       this.props.dispatch(tryToGetUserGeo())
+      this.props.dispatch(monitorGeo())
       this.props.dispatch(logHeading())
-      this.setState({map: true})
     });
+  }
+
+  componentWillUnmount() {
+    this.props.dispatch(stopLogHeading())
+    this.props.dispatch({type: 'RESTAURANT_CLEAR_HIGHLIGHTED'})
   }
 
   _getDistanceAndDirectionObject(restaurantCoords) {
@@ -63,10 +60,7 @@ export default class Map extends Component {
     return {angle: angle - this.props.heading, distance: distance|0}
   }
 
-  componentWillUnmount() {
-    this.props.dispatch(stopLogHeading())
-    this.props.dispatch({type: 'RESTAURANT_CLEAR_HIGHLIGHTED'})
-  }
+
 
   _sortRestaurants(coords) {
     console.info('Sorting Restaurants by', coords)

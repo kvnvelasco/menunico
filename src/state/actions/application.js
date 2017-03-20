@@ -1,14 +1,13 @@
-
 import {fetchRestaurants, getFilters, getMenusByRestaurantIds, getDishById} from './api'
-import {ToastAndroid, PermissionsAndroid} from 'react-native'
-
+import {getLocationInformation} from './device'
 import { DeviceEventEmitter, InteractionManager } from 'react-native'
 import ReactNativeHeading from 'react-native-heading'
 
 export function bootstrap() {
   return async dispatch => {
     try {
-      const geo = await getLocationInformation(dispatch)
+      const geo = await getLocationInformation()(dispatch)
+      console.log('Bootstrapped Location', geo)
       await dispatch({type:'LOADING_RESTAURANTS'})
       let request = {}
       if(geo) {
@@ -39,31 +38,9 @@ export function bootstrap() {
 }
 
 
-export function tryToGetUserGeo() {
-  return async dispatch => {
-    const coords = await getLocationInformation(dispatch)
-  }
-}
 
-async function getLocationInformation(dispatch) {
-  try {
-    const geoPromise = new Promise( (resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(resolve, reject)
-    })
-    const geo = await geoPromise
-    dispatch({type: 'USER_GEO', payload: geo.coords})
-    navigator.geolocation.watchPosition( (succ, err) => {
-      if(succ) dispatch({type: 'USER_GEO', payload: succ.coords})
-    }, _ => {
-      dispatch({type: 'NO_GEOLOCATION_AVAILABLE'})
-      console.log(_)
-    }, {enableHighAccuracy: true} )
-    return geo.coords
-  } catch (e) {
-    ToastAndroid.show('To get the most out of Menunico, enable the GPS', ToastAndroid.LONG)
-    dispatch({type: 'NO_GEOLOCATION_AVAILABLE'})
-  }
-}
+
+
 
 export function logHeading() {
   return async dispatch => {
