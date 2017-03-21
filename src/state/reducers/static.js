@@ -95,13 +95,13 @@ const initialState = {
      ecologic
    },
    otherServices: {
-     AC,
-     disabled,
-     kids,
-     parking,
-     play,
-     terrace,
-     wifi
+    "Wifi": wifi,
+    "Terrace": terrace,
+    "Parking": parking,
+    "AC": AC,
+    "Menu for kids": kids,
+    "Place for kids": play,
+    "Access for disabled": disabled
    },
    allergies: {
      celery,

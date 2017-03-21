@@ -607,7 +607,7 @@ class Services extends Component {
               height={30}
               width={30}
               resize='cover'
-              image={this.props.static.wifi}
+              image={this.props.static['Wifi']}
               checked={this.props.filters['Wifi']}
               handler={this.filterSelector.bind(this, 'Wifi', this.props.filters['Wifi'])} />
           </View>
@@ -620,7 +620,7 @@ class Services extends Component {
               height={30}
               width={30}
               resize='cover'
-              image={this.props.static.terrace}
+              image={this.props.static['Terrace']}
               checked={this.props.filters['Terrace']}
               handler={this.filterSelector.bind(this, 'Terrace', this.props.filters['Terrace'])} />
           </View>
@@ -633,7 +633,7 @@ class Services extends Component {
               height={30}
               width={30}
               resize='cover'
-              image={this.props.static.parking}
+              image={this.props.static['Parking']}
               checked={this.props.filters['Parking']}
               handler={this.filterSelector.bind(this, 'Parking', this.props.filters['Parking'])} />
           </View>
@@ -646,7 +646,7 @@ class Services extends Component {
               height={30}
               width={30}
               resize='cover'
-              image={this.props.static.kids}
+              image={this.props.static['Menu for kids']}
               checked={this.props.filters['Menu for kids']}
               handler={this.filterSelector.bind(this, 'Menu for kids', this.props.filters['Menu for kids'])} />
           </View>
@@ -659,7 +659,7 @@ class Services extends Component {
               height={30}
               width={30}
               resize='cover'
-              image={this.props.static.play}
+              image={this.props.static['Place for kids']}
               checked={this.props.filters['Place for kids']}
               handler={this.filterSelector.bind(this, 'Place for kids', this.props.filters['Place for kids'])} />
           </View>
@@ -672,7 +672,7 @@ class Services extends Component {
               height={30}
               width={30}
               resize='cover'
-              image={this.props.static.disabled}
+              image={this.props.static['Access for disabled']}
               checked={this.props.filters['Access for disabled']}
               handler={this.filterSelector.bind(this, 'Access for disabled', this.props.filters['Access for disabled'])}/>
           </View>
