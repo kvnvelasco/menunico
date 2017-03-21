@@ -31,6 +31,35 @@ import vegan from 'menunico/src/static/vegan.png'
 import vegetarian from 'menunico/src/static/vegetarian.png'
 import ecologic from 'menunico/src/static/ecologic.png'
 
+// Other Services
+
+import AC from 'menunico/src/static/other_services/AC.png'
+import disabled from 'menunico/src/static/other_services/access_for_disabled.png'
+import kids from 'menunico/src/static/other_services/menu_for_kids.png'
+import parking from 'menunico/src/static/other_services/parking.png'
+import play from 'menunico/src/static/other_services/place_for_kids.png'
+import terrace from 'menunico/src/static/other_services/terrace.png'
+import wifi from 'menunico/src/static/other_services/wifi.png'
+
+// allergies
+
+import celery from 'menunico/src/static/allergies/celery.png'
+import crustaceans from 'menunico/src/static/allergies/Crustaceans.png'
+import eggs from 'menunico/src/static/allergies/eggs.png'
+import fish from 'menunico/src/static/allergies/fish.png'
+import gluten_ from 'menunico/src/static/allergies/gluten.png'
+import lupins from 'menunico/src/static/allergies/lupins.png'
+import milk from 'menunico/src/static/allergies/milk.png'
+import mustard from 'menunico/src/static/allergies/mustard.png'
+import nuts from 'menunico/src/static/allergies/nuts.png'
+import peanuts from 'menunico/src/static/allergies/Peanuts.png'
+import sesameSeeds from 'menunico/src/static/allergies/Sesame_seeds.png'
+import shellfish from 'menunico/src/static/allergies/Shellfish.png'
+import soybean from 'menunico/src/static/allergies/Soybean.png'
+import sulfurDioxide from 'menunico/src/static/allergies/Sulfur_dioxide.png'
+
+
+
 const initialState = {
   swoosh,
   demoCover,
@@ -64,6 +93,31 @@ const initialState = {
      vegan,
      vegetarian,
      ecologic
+   },
+   otherServices: {
+    "Wifi": wifi,
+    "Terrace": terrace,
+    "Parking": parking,
+    "AC": AC,
+    "Menu for kids": kids,
+    "Place for kids": play,
+    "Access for disabled": disabled
+   },
+   allergies: {
+     celery,
+     crustaceans,
+     eggs,
+     fish,
+     gluten: gluten_,
+     lupins,
+     milk,
+     mustard,
+     nuts,
+     peanuts,
+     sesameSeeds,
+     shellfish,
+     soybean,
+     sulfurDioxide
    }
 }
 

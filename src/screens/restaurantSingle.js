@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
   },
 });
 
-
 export default class RestaurantSingle extends Component {
   constructor(props) {
     super(props)
@@ -254,6 +253,12 @@ export default class RestaurantSingle extends Component {
                   </MapView>
               </View>
             }
+            <View align='stretch' margin={[10]} padding={[0, 20, 40 , 20]}>
+              <Text size={15} bold>Restaurant Services</Text>
+              <View direction='row' margin={[10]}>
+                  {resto.services && resto.services.map( item =>  <Image margin={[0,10]} key={item.mainid} source={this.props.static.otherServices[item.name]} height={40} width={66}/> )}
+              </View>
+            </View>
             <View align='stretch' margin={[10]} padding={[0, 20, 40 , 20]}>
               <Text size={15} bold>Payment Methods</Text>
               <View direction='row' margin={[10]}>

@@ -33,6 +33,8 @@ class Filters extends Component {
           <Home filters={this.props.filters} key='home'/>
           <Cuisine defaultFilters={this.props.defaultFilters.origins}  filters={this.props.filters.origins || {}} key='origins'/>
           <Preferences key='types' prefs={this.props.prefs} filters={this.props.filters.types || {}} />
+          <Allergies key='allergies' filters={this.props.filters.allergies || {}} static={this.props.allergies}/>
+          <Services key='services' filters={this.props.filters.services || {}} static={this.props.services}/>
           <Neighborhood selected={this.props.filters.neighborhood} key='neighborhood' />
           <Payment key='paymentmethods'
             cards={this.props.cards}
@@ -48,7 +50,9 @@ export default connect( store => ({
   filters: store.restaurants.filters || {},
   defaultFilters: store.restaurants.defaultFilters,
   cards: store.static.payment,
-  prefs: store.static.filters
+  prefs: store.static.filters,
+  allergies: store.static.allergies,
+  services: store.static.otherServices
 }))(Filters)
 
 
@@ -88,9 +92,11 @@ class Home extends Component {
     this.props.dispatch(filterRestaurants(query))
     this.props.navigator.pop()
   }
+
   render() {
+    console.log(this.props.filters.services)
     return <View align='stretch' justify='space-between'
-      padding={[40,20,20,20]}>
+      padding={[10,20,20,20]}>
       <View direction='row' flex={0}
         justify='space-between' align='center'>
         <View margin={[0,20]}>
@@ -125,6 +131,36 @@ class Home extends Component {
       <View direction='row' flex={0}
         justify='space-between' align='center'>
         <View margin={[0,20]}>
+          <Text>Allergies</Text>
+          <Text
+            size={14}
+            color='#aaa'>
+            {Object.keys(this.props.filters.allergies || {}).reduce((acc, item, index, arr) => {
+            return acc + (this.props.filters.allergies[item] ? `${item.charAt(0).toUpperCase() + item.slice(1)}  ` : '')
+          }, '') || 'No Allergies Selected'}</Text>
+        </View>
+        <Button
+          onPress={this._navigateToFilter.bind(this, 'allergies')}
+          title='Add' color='#F2504B'/>
+      </View>
+      <View direction='row' flex={0}
+        justify='space-between' align='center'>
+        <View margin={[0,20]}>
+          <Text>Other Services</Text>
+          <Text
+            size={14}
+            color='#aaa'>
+            {Object.keys(this.props.filters.services || {}).reduce((acc, item, index, arr) => {
+            return acc + (this.props.filters.services[item] ? `${item.charAt(0).toUpperCase() + item.slice(1)}  ` : '')
+          }, '') || 'No Services Selected'}</Text>
+        </View>
+        <Button
+          onPress={this._navigateToFilter.bind(this, 'services')}
+          title='Add' color='#F2504B'/>
+      </View>
+      <View direction='row' flex={0}
+        justify='space-between' align='center'>
+        <View margin={[0,20]}>
           <Text>Neighborhood</Text>
           <Text
             size={14}
@@ -150,11 +186,10 @@ class Home extends Component {
           onPress={this._navigateToFilter.bind(this, 'paymentmethods')}
           title='Add' color='#F2504B'/>
       </View>
-
       <View flex={0}
         justify='space-between'>
         <Text >{`Price Range (€${this.props.filters.price[0]*5} - €${this.props.filters.price[1]*5})`}</Text>
-        <View flex={0} height={60} padding={[30,20,30,20]} align='center'>
+        <View flex={0} height={40} padding={[30,20,30,20]} align='center'>
           <Slider values={this.props.filters.price} sliderLength={280}
             selectedStyle={{
               backgroundColor: '#F2504B'
@@ -314,6 +349,332 @@ class Preferences extends Component {
               image={this.props.prefs.other}
               checked={this.props.filters['Other']}
               handler={this.filterSelector.bind(this, 'Other', this.props.filters['Other'])} />
+          </View>
+        </View>
+        <Button
+          onPress={e => this.props.navigator.pop()}
+          color='#F2504B'
+          title='Set Filters'/>
+      </View>
+    )
+  }
+}
+
+class Allergies extends Component {
+  filterSelector(name, value) {
+    const payload = {
+      group: 'allergies',
+      name,
+      value: !value
+    }
+    this.props.dispatch({type:'TOGGLE_FILTER', payload})
+  }
+  render() {
+    return (
+      <View align='stretch' padding={[10,20,20,10]} background='white'>
+        <Text
+          align='center'
+          size={24}
+          color='#F2504B'>Choose your preferences</Text>
+        <ScrollView>
+          <View align='stretch' justify='space-between' padding={[20,0,10]}>
+            <View direction='row' flex={0}
+              justify='space-between' align='center'>
+              <Text>Gluten</Text>
+              <CheckImage
+                height={30}
+                width={30}
+                resize='cover'
+                image={this.props.static.gluten}
+                checked={this.props.filters['Gluten']}
+                handler={this.filterSelector.bind(this, 'Gluten', this.props.filters['Gluten'])} />
+            </View>
+          </View>
+          <View align='stretch' justify='space-between' padding={[20,0,10]}>
+            <View direction='row' flex={0}
+              justify='space-between' align='center'>
+              <Text>Crustaceans</Text>
+              <CheckImage
+                height={30}
+                width={30}
+                resize='cover'
+                image={this.props.static.crustaceans}
+                checked={this.props.filters['Crustaceans']}
+                handler={this.filterSelector.bind(this, 'Crustaceans', this.props.filters['Crustaceans'])} />
+            </View>
+          </View>
+          <View align='stretch' justify='space-between' padding={[20,0,10]}>
+            <View direction='row' flex={0}
+              justify='space-between' align='center'>
+              <Text>Eggs</Text>
+              <CheckImage
+                height={30}
+                width={30}
+                resize='cover'
+                image={this.props.static.eggs}
+                checked={this.props.filters['Eggs']}
+                handler={this.filterSelector.bind(this, 'Eggs', this.props.filters['Eggs'])} />
+            </View>
+          </View>
+          <View align='stretch' justify='space-between' padding={[20,0,10]}>
+            <View direction='row' flex={0}
+              justify='space-between' align='center'>
+              <Text>Fish</Text>
+              <CheckImage
+                height={30}
+                width={30}
+                resize='cover'
+                image={this.props.static.fish}
+                checked={this.props.filters['Fish']}
+                handler={this.filterSelector.bind(this, 'Fish', this.props.filters['Fish'])} />
+            </View>
+          </View>
+          <View align='stretch' justify='space-between' padding={[20,0,10]}>
+            <View direction='row' flex={0}
+              justify='space-between' align='center'>
+              <Text>Peanuts</Text>
+              <CheckImage
+                height={30}
+                width={30}
+                resize='cover'
+                image={this.props.static.peanuts}
+                checked={this.props.filters['Peanuts']}
+                handler={this.filterSelector.bind(this, 'Peanuts', this.props.filters['Peanuts'])} />
+            </View>
+          </View>
+          <View align='stretch' justify='space-between' padding={[20,0,10]}>
+            <View direction='row' flex={0}
+              justify='space-between' align='center'>
+              <Text>Soybean</Text>
+              <CheckImage
+                height={30}
+                width={30}
+                resize='cover'
+                image={this.props.static.soybean}
+                checked={this.props.filters['Soybean']}
+                handler={this.filterSelector.bind(this, 'Soybean', this.props.filters['Soybean'])} />
+            </View>
+          </View>
+          <View align='stretch' justify='space-between' padding={[20,0,10]}>
+            <View direction='row' flex={0}
+              justify='space-between' align='center'>
+              <Text>Milk</Text>
+              <CheckImage
+                height={30}
+                width={30}
+                resize='cover'
+                image={this.props.static.milk}
+                checked={this.props.filters['Milk']}
+                handler={this.filterSelector.bind(this, 'Milk', this.props.filters['Milk'])}/>
+            </View>
+          </View>
+          <View align='stretch' justify='space-between' padding={[20,0,10]}>
+            <View direction='row' flex={0}
+              justify='space-between' align='center'>
+              <Text>Nuts</Text>
+              <CheckImage
+                height={30}
+                width={30}
+                resize='cover'
+                image={this.props.static.nuts}
+                checked={this.props.filters['Nuts']}
+                handler={this.filterSelector.bind(this, 'Nuts', this.props.filters['Nuts'])}/>
+            </View>
+          </View>
+          <View align='stretch' justify='space-between' padding={[20,0,10]}>
+            <View direction='row' flex={0}
+              justify='space-between' align='center'>
+              <Text>Celery</Text>
+              <CheckImage
+                height={30}
+                width={30}
+                resize='cover'
+                image={this.props.static.celery}
+                checked={this.props.filters['Celery']}
+                handler={this.filterSelector.bind(this, 'Celery', this.props.filters['Celery'])}/>
+            </View>
+          </View>
+          <View align='stretch' justify='space-between' padding={[20,0,10]}>
+            <View direction='row' flex={0}
+              justify='space-between' align='center'>
+              <Text>Mustard</Text>
+              <CheckImage
+                height={30}
+                width={30}
+                resize='cover'
+                image={this.props.static.mustard}
+                checked={this.props.filters['Mustard']}
+                handler={this.filterSelector.bind(this, 'Mustard', this.props.filters['Mustard'])}/>
+            </View>
+          </View>
+          <View align='stretch' justify='space-between' padding={[20,0,10]}>
+            <View direction='row' flex={0}
+              justify='space-between' align='center'>
+              <Text>Sesame seeds</Text>
+              <CheckImage
+                height={30}
+                width={30}
+                resize='cover'
+                image={this.props.static.sesameSeeds}
+                checked={this.props.filters['Sesame seeds']}
+                handler={this.filterSelector.bind(this, 'Sesame seeds', this.props.filters['Sesame seeds'])}/>
+            </View>
+          </View>
+          <View align='stretch' justify='space-between' padding={[20,0,10]}>
+            <View direction='row' flex={0}
+              justify='space-between' align='center'>
+              <Text>Sulfur dioxide more than 10MG/KG</Text>
+              <CheckImage
+                height={30}
+                width={30}
+                resize='cover'
+                image={this.props.static.sulfurDioxide}
+                checked={this.props.filters['Sulfur Dioxide']}
+                handler={this.filterSelector.bind(this, 'Sulfur Dioxide', this.props.filters['Sulfur Dioxide'])}/>
+            </View>
+          </View>
+          <View align='stretch' justify='space-between' padding={[20,0,10]}>
+            <View direction='row' flex={0}
+              justify='space-between' align='center'>
+              <Text>Lupins</Text>
+              <CheckImage
+                height={30}
+                width={30}
+                resize='cover'
+                image={this.props.static.lupins}
+                checked={this.props.filters['Lupins']}
+                handler={this.filterSelector.bind(this, 'Lupins', this.props.filters['Lupins'])}/>
+            </View>
+          </View>
+          <View align='stretch' justify='space-between' padding={[20,0,10]}>
+            <View direction='row' flex={0}
+              justify='space-between' align='center'>
+              <Text>Shellfish</Text>
+              <CheckImage
+                height={30}
+                width={30}
+                resize='cover'
+                image={this.props.static.shellfish}
+                checked={this.props.filters['Shellfish']}
+                handler={this.filterSelector.bind(this, 'Shellfish', this.props.filters['Shellfish'])}/>
+            </View>
+          </View>
+        </ScrollView>
+        <Button
+          onPress={e => this.props.navigator.pop()}
+          color='#F2504B'
+          title='Set Filters'/>
+      </View>
+    )
+  }
+}
+
+class Services extends Component {
+  filterSelector(name, value) {
+    const payload = {
+      group: 'services',
+      name,
+      value: !value
+    }
+    this.props.dispatch({type:'TOGGLE_FILTER', payload})
+  }
+
+  render() {
+    return (
+      <View align='stretch' padding={[10,20,20,10]} background='white'>
+        <Text
+          align='center'
+          size={24}
+          color='#F2504B'>Choose your preferences</Text>
+        <View align='stretch' justify='space-between' padding={[20,0,10]}>
+          <View direction='row' flex={0}
+            justify='space-between' align='center'>
+            <Text>AC</Text>
+            <CheckImage
+              height={30}
+              width={30}
+              resize='cover'
+              image={this.props.static.AC}
+              checked={this.props.filters['AC']}
+              handler={this.filterSelector.bind(this, 'AC', this.props.filters['AC'])} />
+          </View>
+        </View>
+        <View align='stretch' justify='space-between' padding={[20,0,10]}>
+          <View direction='row' flex={0}
+            justify='space-between' align='center'>
+            <Text>Wi-Fi</Text>
+            <CheckImage
+              height={30}
+              width={30}
+              resize='cover'
+              image={this.props.static['Wifi']}
+              checked={this.props.filters['Wifi']}
+              handler={this.filterSelector.bind(this, 'Wifi', this.props.filters['Wifi'])} />
+          </View>
+        </View>
+        <View align='stretch' justify='space-between' padding={[20,0,10]}>
+          <View direction='row' flex={0}
+            justify='space-between' align='center'>
+            <Text>Terrace</Text>
+            <CheckImage
+              height={30}
+              width={30}
+              resize='cover'
+              image={this.props.static['Terrace']}
+              checked={this.props.filters['Terrace']}
+              handler={this.filterSelector.bind(this, 'Terrace', this.props.filters['Terrace'])} />
+          </View>
+        </View>
+        <View align='stretch' justify='space-between' padding={[20,0,10]}>
+          <View direction='row' flex={0}
+            justify='space-between' align='center'>
+            <Text>Parking</Text>
+            <CheckImage
+              height={30}
+              width={30}
+              resize='cover'
+              image={this.props.static['Parking']}
+              checked={this.props.filters['Parking']}
+              handler={this.filterSelector.bind(this, 'Parking', this.props.filters['Parking'])} />
+          </View>
+        </View>
+        <View align='stretch' justify='space-between' padding={[20,0,10]}>
+          <View direction='row' flex={0}
+            justify='space-between' align='center'>
+            <Text>Menu for Kids</Text>
+            <CheckImage
+              height={30}
+              width={30}
+              resize='cover'
+              image={this.props.static['Menu for kids']}
+              checked={this.props.filters['Menu for kids']}
+              handler={this.filterSelector.bind(this, 'Menu for kids', this.props.filters['Menu for kids'])} />
+          </View>
+        </View>
+        <View align='stretch' justify='space-between' padding={[20,0,10]}>
+          <View direction='row' flex={0}
+            justify='space-between' align='center'>
+            <Text>Place for Kids</Text>
+            <CheckImage
+              height={30}
+              width={30}
+              resize='cover'
+              image={this.props.static['Place for kids']}
+              checked={this.props.filters['Place for kids']}
+              handler={this.filterSelector.bind(this, 'Place for kids', this.props.filters['Place for kids'])} />
+          </View>
+        </View>
+        <View align='stretch' justify='space-between' padding={[20,0,10]}>
+          <View direction='row' flex={0}
+            justify='space-between' align='center'>
+            <Text>Access for disabled</Text>
+            <CheckImage
+              height={30}
+              width={30}
+              resize='cover'
+              image={this.props.static['Access for disabled']}
+              checked={this.props.filters['Access for disabled']}
+              handler={this.filterSelector.bind(this, 'Access for disabled', this.props.filters['Access for disabled'])}/>
           </View>
         </View>
         <Button
