@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View } from 'menunico/src/components/layout'
 import { Navigator } from 'menunico/src/composites/navigation'
+import Authentication from './authentication'
 import Restaurants from './restaurants'
 import Restaurant from './restaurant'
 import Dish from './dish'
@@ -73,7 +74,16 @@ class Menunico extends Component {
         <Navigator
           id='menunico'
           data={this.props.navigator}
-          dispatch={this.props.dispatch}>
+          dispatch={this.props.dispatch}
+          initialRoute={{ key: 'authentication',
+              showSearch: false,
+              title: 'Create an Account',
+              navbar: {
+                background: '#58585A',
+                color: 'white'
+              }
+            }}>
+          <Authentication key='authentication' />
           <Restaurants key='restaurants'
             hasGeo={this.props.application.geoStatus}
             location={this.props.user.geo}
@@ -114,30 +124,30 @@ class Menunico extends Component {
             : <TouchableOpacity
                 hitSlop={ {top: 10, left: 10, bottom: 10, right: 10}}
                onPress={this.menu._open}>
-                <Icon name='menu' size={24} />
+                <Icon name='menu' size={24} color={navbarStyle.color || 'black'}/>
               </TouchableOpacity>
           }
-            {navbarState && !showSearch
-              ? <Text size={20} bold style={{marginLeft: 10}}>
-                {this.props.navigator.currentRoute.title || ''}</Text>
-              : <TextInput
-                onChange={this._searchTextHandler.bind(this)}
-                underlineColorAndroid='#F2504B'
-                placeholder='(Address, Restaurant, Dish)'
-                style={{width: 240, fontSize: 14}}/>
-            }
-            {
-              navbarState && !showSearch
-              ? null
-              : <TouchableOpacity onPress={this._search.bind(this)}>
-                  <Icon name='search' size={24} />
-                </TouchableOpacity>
-            }
-            {
-              currentRoute.extra
-              ? currentRoute.extra
-              : null
-            }
+          {navbarState || !showSearch
+            ? <Text size={20} bold style={{marginLeft: 10}} color={navbarStyle.color || 'black'}>
+              {currentRoute.title || ''}</Text>
+            : <TextInput
+              onChange={this._searchTextHandler.bind(this)}
+              underlineColorAndroid='#F2504B'
+              placeholder='(Address, Restaurant, Dish)'
+              style={{width: 240, fontSize: 14}}/>
+          }
+          {
+            navbarState || !showSearch
+            ? null
+            : <TouchableOpacity onPress={this._search.bind(this)}>
+                <Icon name='search' size={24} />
+              </TouchableOpacity>
+          }
+          {
+            currentRoute.extra
+            ? currentRoute.extra
+            : null
+          }
         </View>
         <Menu icons={this.props.static.menu}
           dispatch={this.props.dispatch}
