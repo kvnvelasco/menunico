@@ -14,9 +14,9 @@ import { connect } from 'react-redux'
 import {Text} from 'menunico/src/components/type'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { filterRestaurants } from 'menunico/src/state/actions/restaurants'
+import {getLocationInformation} from 'menunico/src/state/actions/device'
 
 
-import {tryToGetUserGeo} from 'menunico/src/state/actions/application'
 class Menunico extends Component {
   constructor(){
     super()
@@ -37,7 +37,7 @@ class Menunico extends Component {
 
   _checkRequiredConnections(type) {
     if(type == 'active') {
-      this.props.dispatch(tryToGetUserGeo())
+      this.props.dispatch(getLocationInformation())
     }
   }
 

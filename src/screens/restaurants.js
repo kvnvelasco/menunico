@@ -11,7 +11,7 @@ import Fa from 'react-native-vector-icons/FontAwesome'
 import moment from 'moment'
 import {openFilters} from 'menunico/src/state/actions/application'
 import { openRestaurant, filterRestaurants } from 'menunico/src/state/actions/restaurants'
-import {tryToGetUserGeo} from 'menunico/src/state/actions/application'
+import {getLocationInformation} from 'menunico/src/state/actions/device'
 
 export default class Restaurants extends Component {
   constructor(props) {
@@ -140,7 +140,7 @@ export default class Restaurants extends Component {
   }
 
   _onRefresh() {
-    this.props.dispatch(tryToGetUserGeo())
+    this.props.dispatch(getLocationInformation())
     this.props.dispatch(filterRestaurants())
   }
 
